@@ -64,7 +64,8 @@ namespace API.Controllers
                 });
             }
 
-            var authResponse = await _authService.RegisterAsync(registerDto.Email, registerDto.Password, registerDto.Username);
+            var authResponse = await _authService.RegisterAsync(registerDto.Email, registerDto.Password,
+                                        registerDto.Username, registerDto.FirstName, registerDto.LastName);
 
             if (authResponse.Success)
             {

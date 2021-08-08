@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -13,9 +14,9 @@ namespace Application.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _config;
-        public AuthService(UserManager<IdentityUser> userManager, IConfiguration config)
+        public AuthService(UserManager<AppUser> userManager, IConfiguration config)
         {
             _config = config;
             _userManager = userManager;
@@ -53,7 +54,7 @@ namespace Application.Services
             };
         }
 
-        public async Task<AuthResult> RegisterAsync(string email, string password, string username)
+        public async Task<AuthResult> RegisterAsync(string email, string password, string username, string firstName, string LastName)
         {
             if (await _userManager.FindByEmailAsync(email) != null)
             {
@@ -64,10 +65,13 @@ namespace Application.Services
                 };
             }
 
-            var newUser = new IdentityUser
+            var newUser = new AppUser
             {
                 Email = email,
-                UserName = username
+                UserName = username,
+                FirstName = firstName,
+                LastName = LastName
+                
             };
 
             var createdUser = await _userManager.CreateAsync(newUser, password);
@@ -89,7 +93,7 @@ namespace Application.Services
 
         }
 
-        private string CreateToken(IdentityUser user)
+        private string CreateToken(AppUser user)
         {
             var claims = new List<Claim>
             {

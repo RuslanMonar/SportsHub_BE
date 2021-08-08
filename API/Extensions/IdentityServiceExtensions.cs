@@ -1,5 +1,6 @@
 using System.Text;
 using Data;
+using Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -12,9 +13,9 @@ namespace API.Extensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
         {
-            services.AddIdentityCore<IdentityUser>()
+            services.AddIdentityCore<AppUser>()
                 .AddEntityFrameworkStores<DataContext>()
-                .AddSignInManager<SignInManager<IdentityUser>>();
+                .AddSignInManager<SignInManager<AppUser>>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
                 {
