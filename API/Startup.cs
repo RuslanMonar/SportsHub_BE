@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Extensions;
 using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,10 +37,7 @@ namespace API
 
             services.AddControllers();
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
-            services.AddIdentityCore<IdentityUser>()
-                .AddEntityFrameworkStores<DataContext>()
-                .AddSignInManager<SignInManager<IdentityUser>>();
-            services.AddAuthentication();
+            services.AddIdentityServices(_config);
 
 
             services.AddSwaggerGen(c =>
