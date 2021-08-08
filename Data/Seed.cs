@@ -16,6 +16,7 @@ namespace Data
                     new IdentityUser{ UserName = "bob", Email = "bob@test.com"},
                     new IdentityUser{ UserName = "tom", Email = "tom@test.com"},
                     new IdentityUser{ UserName = "jane", Email = "jane@test.com"},
+                    new IdentityUser{ UserName = "Mark", Email = "Mark@test.com"},
                 };
 
                 foreach (var user in users)
