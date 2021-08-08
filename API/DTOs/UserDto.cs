@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace API.DTOs
 {
     public class UserDto
@@ -8,6 +10,8 @@ namespace API.DTOs
         public string Token { get; set; }
 
         public string Image { get; set; }
+
+        public IEnumerable<string> Errors { get; set; }
 
     }
 }
