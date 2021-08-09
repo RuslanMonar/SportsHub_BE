@@ -4,7 +4,7 @@ namespace Application.Services
 {
     public interface IAuthService
     {
-        Task<AuthResult> RegisterAsync(string email, string password, string username, string firstName, string LastName);
+        Task<AuthResult> RegisterAsync(string email, string password, string firstName, string LastName);
         Task<AuthResult> LoginAsync(string email, string password);
     }
 }

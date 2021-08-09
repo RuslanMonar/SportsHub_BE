@@ -37,7 +37,6 @@ namespace API.Controllers
             {
                 return Ok(new UserDto
                 {
-                    Username = authResponse.Username,
                     Image = null,
                     Token = authResponse.Token
                 });
@@ -65,13 +64,12 @@ namespace API.Controllers
             }
 
             var authResponse = await _authService.RegisterAsync(registerDto.Email, registerDto.Password,
-                                        registerDto.Username, registerDto.FirstName, registerDto.LastName);
+                                        registerDto.FirstName, registerDto.LastName);
 
             if (authResponse.Success)
             {
                 return Ok(new UserDto
                 {
-                    Username = authResponse.Username,
                     Image = null,
                     Token = authResponse.Token
                 });

@@ -49,12 +49,10 @@ namespace Application.Services
             {
                 Success = true,
                 Token = CreateToken(user),
-                Username = user.UserName
-
             };
         }
 
-        public async Task<AuthResult> RegisterAsync(string email, string password, string username, string firstName, string LastName)
+        public async Task<AuthResult> RegisterAsync(string email, string password, string firstName, string LastName)
         {
             if (await _userManager.FindByEmailAsync(email) != null)
             {
@@ -68,10 +66,11 @@ namespace Application.Services
             var newUser = new AppUser
             {
                 Email = email,
-                UserName = username,
                 FirstName = firstName,
-                LastName = LastName
-                
+                LastName = LastName,
+                UserName = email
+
+
             };
 
             var createdUser = await _userManager.CreateAsync(newUser, password);
@@ -88,7 +87,7 @@ namespace Application.Services
             {
                 Success = true,
                 Token = CreateToken(newUser),
-                Username = username
+
             };
 
         }
@@ -97,7 +96,7 @@ namespace Application.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Name, user.FirstName+" "+user.LastName),
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email)
             };
