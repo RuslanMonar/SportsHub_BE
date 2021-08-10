@@ -146,8 +146,7 @@ namespace Application.Services
 
             return new AuthResult
             {
-                Success = true,
-                Token = CreateToken(user)
+                Success = true
             };
         }
     }
