@@ -81,5 +81,36 @@ namespace API.Controllers
                 });
             }
         }
+
+
+        [HttpPost]
+        [Route("changePassword")]
+        public async Task<ActionResult<AuthDto>> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new AuthDto
+                {
+                    Errors = ModelState.Values.SelectMany(x => x.Errors.Select(a => a.ErrorMessage))
+                });
+            }
+
+            var authResponse = await _authService.ChangePasswordAsync(changePasswordDto.Email, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+            if (authResponse.Success)
+            {
+                return Ok(new AuthDto
+                {
+                    Token = authResponse.Token
+                });
+            }
+            else
+            {
+                return BadRequest(new AuthDto
+                {
+                    Errors = authResponse.Errors
+                });
+            }
+        }
     }
 }

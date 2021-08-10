@@ -120,5 +120,35 @@ namespace Application.Services
             return tokenHandler.WriteToken(token);
 
         }
+
+        public async Task<AuthResult> ChangePasswordAsync(string email, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new AuthResult
+                {
+                    Errors = new[] { "User does not exist" },
+                    Success = false
+                };
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+            if (!result.Succeeded)
+            {
+                return new AuthResult
+                {
+                    Errors = result.Errors.Select(x => x.Description),
+                    Success = false
+                };
+            }
+
+            return new AuthResult
+            {
+                Success = true,
+                Token = CreateToken(user)
+            };
+        }
     }
 }
