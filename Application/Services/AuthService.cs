@@ -16,10 +16,12 @@ namespace Application.Services
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _config;
-        public AuthService(UserManager<AppUser> userManager, IConfiguration config)
+        private readonly IFacebookAuthService _facebookAuthService;
+        public AuthService(UserManager<AppUser> userManager, IConfiguration config, IFacebookAuthService facebookAuthService)
         {
             _config = config;
             _userManager = userManager;
+            _facebookAuthService = facebookAuthService;
         }
 
         public async Task<AuthResult> LoginAsync(string email, string password)
@@ -50,6 +52,55 @@ namespace Application.Services
                 Success = true,
                 Token = CreateToken(user),
             };
+        }
+
+        public async Task<AuthResult> LoginWithFacebookAsync(string accessToken)
+        {
+            var validatedTokenResult = await _facebookAuthService.ValidateAccessTokenAsync(accessToken);
+            if(!validatedTokenResult.Data.IsValid)
+            {
+                return new AuthResult
+                {
+                    Errors = new[] { "Invalid Facebook Token!" }
+                };
+            }
+            var userInfo = await _facebookAuthService.GetUserInfoAsync(accessToken);
+            var user = await _userManager.FindByEmailAsync(userInfo.Email);
+
+            if(user == null)
+            {
+                var newUser = new AppUser
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Email = userInfo.Email,
+                    UserName = userInfo.FirstName + userInfo.LastName
+
+                };
+                var createdResult = await _userManager.CreateAsync(newUser);
+                if(!createdResult.Succeeded)
+                {
+                    return new AuthResult
+                    {
+                        Errors = new[] { "Something went wrong..." }
+                    };
+                }
+                else
+                {
+                    return new AuthResult
+                    {
+                        Success = true,
+                        Token = CreateToken(newUser),
+                    };
+                }
+            }
+            else
+            {
+                return new AuthResult
+                {
+                    Success = true,
+                    Token = CreateToken(user),
+                };
+            }
         }
 
         public async Task<AuthResult> RegisterAsync(string email, string password, string firstName, string LastName)

@@ -2,9 +2,14 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
+using Application;
+using Application.FacebookResult;
 using Application.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
+
+
 
 namespace API.Controllers
 {
@@ -76,6 +81,30 @@ namespace API.Controllers
             else
             {
                 return BadRequest(new
+                {
+                    Errors = authResponse.Errors
+                });
+            }
+        }
+        [HttpPost]
+        [Route("FBlogin")]
+        public async Task<ActionResult<AuthDto>> FBLogin(UserFacebookDto request)
+        {
+
+            
+
+            var authResponse = await _authService.LoginWithFacebookAsync(request.AccessToken);
+            if (authResponse.Success)
+            {
+                return Ok(new AuthDto
+                {
+
+                    Token = authResponse.Token
+                });
+            }
+            else
+            {
+                return BadRequest(new AuthDto
                 {
                     Errors = authResponse.Errors
                 });
