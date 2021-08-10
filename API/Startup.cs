@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Extensions;
+using Application.Services;
 using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,15 +38,21 @@ namespace API
 
             services.AddControllers();
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
-            services.AddIdentityCore<IdentityUser>()
-                .AddEntityFrameworkStores<DataContext>()
-                .AddSignInManager<SignInManager<IdentityUser>>();
-            services.AddAuthentication();
+            services.AddIdentityServices(_config);
+            services.AddScoped<IAuthService, AuthService>();
 
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+            });
+
+            services.AddCors(Opt =>
+            {
+                Opt.AddPolicy("CorsPolicy", policy =>
+                 {
+                     policy.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();//.WithOrigins("http://localhost:3000");
+                });
             });
         }
 
@@ -61,6 +69,7 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseAuthorization();
 
