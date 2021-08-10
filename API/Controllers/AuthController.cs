@@ -21,12 +21,12 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
+        public async Task<ActionResult<AuthDto>> Login(LoginDto loginDto)
         {
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(new UserDto
+                return BadRequest(new AuthDto
                 {
                     Errors = ModelState.Values.SelectMany(x => x.Errors.Select(a => a.ErrorMessage))
                 });
@@ -35,15 +35,15 @@ namespace API.Controllers
             var authResponse = await _authService.LoginAsync(loginDto.Email, loginDto.Password);
             if (authResponse.Success)
             {
-                return Ok(new UserDto
+                return Ok(new AuthDto
                 {
-                    Image = null,
+
                     Token = authResponse.Token
                 });
             }
             else
             {
-                return BadRequest(new UserDto
+                return BadRequest(new AuthDto
                 {
                     Errors = authResponse.Errors
                 });
@@ -53,11 +53,11 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
+        public async Task<ActionResult<AuthDto>> Register(RegisterDto registerDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new UserDto
+                return BadRequest(new AuthDto
                 {
                     Errors = ModelState.Values.SelectMany(x => x.Errors.Select(a => a.ErrorMessage))
                 });
@@ -68,15 +68,14 @@ namespace API.Controllers
 
             if (authResponse.Success)
             {
-                return Ok(new UserDto
+                return Ok(new AuthDto
                 {
-                    Image = null,
                     Token = authResponse.Token
                 });
             }
             else
             {
-                return BadRequest(new UserDto
+                return BadRequest(new
                 {
                     Errors = authResponse.Errors
                 });
