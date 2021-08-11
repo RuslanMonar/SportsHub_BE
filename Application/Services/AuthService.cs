@@ -121,15 +121,15 @@ namespace Application.Services
 
         }
 
-        public async Task<AuthResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        public async Task<ChangePasswordResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return new AuthResult
+                return new ChangePasswordResult 
                 {
                     Errors = new[] { "User does not exist" },
-                    Success = false
+                    Status = false
                 };
             }
 
@@ -137,16 +137,16 @@ namespace Application.Services
 
             if (!result.Succeeded)
             {
-                return new AuthResult
+                return new ChangePasswordResult
                 {
                     Errors = result.Errors.Select(x => x.Description),
-                    Success = false
+                    Status = false
                 };
             }
 
-            return new AuthResult
+            return new ChangePasswordResult
             {
-                Success = true
+                Status = true
             };
         }
     }

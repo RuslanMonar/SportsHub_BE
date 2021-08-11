@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API.DTOs
+namespace Application
 {
-    public class ChangePasswordResultDTO
+    public class ChangePasswordResult
     {
         public bool Status { get; set; }
 

@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
+using Application;
 using Application.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -85,28 +86,28 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("changePassword")]
-        public async Task<ActionResult<AuthDto>> ChangePassword(ChangePasswordDto changePasswordDto)
+        public async Task<ActionResult<ChangePasswordResult>> ChangePassword(ChangePasswordDto changePasswordDto)
         {
 
             if (!ModelState.IsValid)
             {
-                return BadRequest(new AuthDto
+                return BadRequest(new ChangePasswordResult
                 {
                     Errors = ModelState.Values.SelectMany(x => x.Errors.Select(a => a.ErrorMessage))
                 });
             }
 
             var authResponse = await _authService.ChangePasswordAsync(changePasswordDto.UserId, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
-            if (authResponse.Success)
+            if (authResponse.Status)
             {
-                return Ok(new ChangePasswordResultDTO
+                return Ok(new ChangePasswordResult
                 {
-                    Status = authResponse.Success
+                    Status = authResponse.Status
                 });
             }
             else
             {
-                return BadRequest(new ChangePasswordResultDTO
+                return BadRequest(new ChangePasswordResult
                 {
                     Errors = authResponse.Errors
                 });
