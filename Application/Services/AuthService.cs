@@ -120,5 +120,23 @@ namespace Application.Services
             return tokenHandler.WriteToken(token);
 
         }
+
+        public async Task<UserResult> GetUserAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                throw new Exception("User does not exists");
+            }
+
+            return new UserResult
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Image = user.Image
+            };
+        }
     }
 }

@@ -81,5 +81,20 @@ namespace API.Controllers
                 });
             }
         }
+
+        [HttpPost]
+        [Route("getUser")]
+        public async Task<ActionResult<Application.UserResult>> GetUser(UserDto user)
+        {
+            try
+            {
+                var receivedUser = await _authService.GetUserAsync(user.Id);
+                return Ok(receivedUser);
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc);
+            }
+        }
     }
 }
