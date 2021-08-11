@@ -99,14 +99,14 @@ namespace API.Controllers
             var authResponse = await _authService.ChangePasswordAsync(changePasswordDto.Email, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
             if (authResponse.Success)
             {
-                return Ok(new AuthDto
+                return Ok(new ChangePasswordResultDTO
                 {
-                    Token = authResponse.Token
+                    Status = authResponse.Success
                 });
             }
             else
             {
-                return BadRequest(new AuthDto
+                return BadRequest(new ChangePasswordResultDTO
                 {
                     Errors = authResponse.Errors
                 });
