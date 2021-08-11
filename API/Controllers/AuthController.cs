@@ -99,6 +99,9 @@ namespace API.Controllers
             catch (Exception exc)
             {
                 return BadRequest(exc);
+            }
+        }
+        
         [HttpPost]
         [Route("FBlogin")]
         public async Task<ActionResult<AuthDto>> FBLogin(UserFacebookDto request)
