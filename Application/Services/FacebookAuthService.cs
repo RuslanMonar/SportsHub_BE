@@ -47,8 +47,7 @@ namespace Application.Services
 
         public async Task<FacebookUserInfoResult> GetUserInfoAsync(string accessToken)
         {
-            var formattedUrl = string.Format(UserInfoUrl, accessToken
-                 );
+            var formattedUrl = string.Format(UserInfoUrl, accessToken);
 
             var result = await _httpClientFactory.CreateClient().GetAsync(formattedUrl);
             try

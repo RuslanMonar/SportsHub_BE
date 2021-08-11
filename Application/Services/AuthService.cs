@@ -73,7 +73,9 @@ namespace Application.Services
                 {
                     Id = Guid.NewGuid().ToString(),
                     Email = userInfo.Email,
-                    UserName = userInfo.FirstName + userInfo.LastName
+                    FirstName = userInfo.FirstName,
+                    LastName = userInfo.LastName,
+                    UserName = userInfo.Email
 
                 };
                 var createdResult = await _userManager.CreateAsync(newUser);
