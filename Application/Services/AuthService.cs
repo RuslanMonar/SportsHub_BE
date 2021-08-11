@@ -121,9 +121,9 @@ namespace Application.Services
 
         }
 
-        public async Task<AuthResult> ChangePasswordAsync(string email, string currentPassword, string newPassword)
+        public async Task<AuthResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 return new AuthResult

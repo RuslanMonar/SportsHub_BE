@@ -96,7 +96,7 @@ namespace API.Controllers
                 });
             }
 
-            var authResponse = await _authService.ChangePasswordAsync(changePasswordDto.Email, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+            var authResponse = await _authService.ChangePasswordAsync(changePasswordDto.UserId, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
             if (authResponse.Success)
             {
                 return Ok(new ChangePasswordResultDTO

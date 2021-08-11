@@ -6,6 +6,6 @@ namespace Application.Services
     {
         Task<AuthResult> RegisterAsync(string email, string password, string firstName, string LastName);
         Task<AuthResult> LoginAsync(string email, string password);
-        Task<AuthResult> ChangePasswordAsync(string email, string currentPassword, string newPassword);
+        Task<AuthResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword);
     }
 }
