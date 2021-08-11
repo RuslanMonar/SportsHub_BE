@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+
 using System.Linq;
 using System.Threading.Tasks;
 using API.Extensions;
+using Application.FacebookResult;
 using Application.Services;
 using Data;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +42,13 @@ namespace API
             services.AddDbContext<DataContext>(opt => opt.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
             services.AddIdentityServices(_config);
             services.AddScoped<IAuthService, AuthService>();
+
+            // facebook auth install
+            var facebookAuthSettings = new FacebookAuthSettings();
+            _config.Bind(nameof(FacebookAuthSettings), facebookAuthSettings);
+            services.AddSingleton(facebookAuthSettings);
+            services.AddHttpClient();
+            services.AddSingleton<IFacebookAuthService, FacebookAuthService>();
 
 
             services.AddSwaggerGen(c =>

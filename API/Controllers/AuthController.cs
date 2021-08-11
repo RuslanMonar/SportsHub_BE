@@ -3,9 +3,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using Application;
+using Application.FacebookResult;
 using Application.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+
+
+
 
 namespace API.Controllers
 {
@@ -84,6 +88,7 @@ namespace API.Controllers
         }
 
 
+
         [HttpPost]
         [Route("changePassword")]
         public async Task<ActionResult<ChangePasswordResult>> ChangePassword(ChangePasswordDto changePasswordDto)
@@ -103,11 +108,36 @@ namespace API.Controllers
                 return Ok(new ChangePasswordResult
                 {
                     Status = authResponse.Status
+                     });
+            }
+            else
+            {
+             return BadRequest(new ChangePasswordResult
+              {
+                    Errors = authResponse.Errors
+                });
+             }
+          }   
+
+       [HttpPost]
+        [Route("FBlogin")]
+        public async Task<ActionResult<AuthDto>> FBLogin(UserFacebookDto request)
+        {
+
+            
+
+            var authResponse = await _authService.LoginWithFacebookAsync(request.AccessToken);
+            if (authResponse.Success)
+            {
+                return Ok(new AuthDto
+                {
+
+                    Token = authResponse.Token
                 });
             }
             else
             {
-                return BadRequest(new ChangePasswordResult
+                return BadRequest(new AuthDto
                 {
                     Errors = authResponse.Errors
                 });
