@@ -5,6 +5,7 @@ using API.DTOs;
 using Application;
 using Application.FacebookResult;
 using Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -91,9 +92,9 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("changePassword")]
+        [Authorize]
         public async Task<ActionResult<ChangePasswordResult>> ChangePassword(ChangePasswordDto changePasswordDto)
         {
-
             if (!ModelState.IsValid)
             {
                 return BadRequest(new ChangePasswordResult

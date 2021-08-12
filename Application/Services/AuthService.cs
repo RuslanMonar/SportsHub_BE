@@ -185,6 +185,14 @@ namespace Application.Services
                     Status = false
                 };
             }
+            if(user.PasswordHash==null)
+            {
+                return new ChangePasswordResult
+                {
+                    Errors = new[] { "Can’t change password" },
+                    Status = false
+                };
+            }
 
             var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
 
