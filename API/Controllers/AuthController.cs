@@ -109,23 +109,23 @@ namespace API.Controllers
                 return Ok(new ChangePasswordResult
                 {
                     Status = authResponse.Status
-                     });
+                });
             }
             else
             {
-             return BadRequest(new ChangePasswordResult
-              {
+                return BadRequest(new ChangePasswordResult
+                {
                     Errors = authResponse.Errors
                 });
-             }
-          }   
+            }
+        }
 
-       [HttpPost]
+        [HttpPost]
         [Route("FBlogin")]
         public async Task<ActionResult<AuthDto>> FBLogin(UserFacebookDto request)
         {
 
-            
+
 
             var authResponse = await _authService.LoginWithFacebookAsync(request.AccessToken);
             if (authResponse.Success)

@@ -57,7 +57,7 @@ namespace Application.Services
         public async Task<AuthResult> LoginWithFacebookAsync(string accessToken)
         {
             var validatedTokenResult = await _facebookAuthService.ValidateAccessTokenAsync(accessToken);
-            if(!validatedTokenResult.Data.IsValid)
+            if (!validatedTokenResult.Data.IsValid)
             {
                 return new AuthResult
                 {
@@ -67,7 +67,7 @@ namespace Application.Services
             var userInfo = await _facebookAuthService.GetUserInfoAsync(accessToken);
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
 
-            if(user == null)
+            if (user == null)
             {
                 var newUser = new AppUser
                 {
@@ -79,7 +79,7 @@ namespace Application.Services
 
                 };
                 var createdResult = await _userManager.CreateAsync(newUser);
-                if(!createdResult.Succeeded)
+                if (!createdResult.Succeeded)
                 {
                     return new AuthResult
                     {
@@ -179,13 +179,13 @@ namespace Application.Services
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return new ChangePasswordResult 
+                return new ChangePasswordResult
                 {
                     Errors = new[] { "User does not exist" },
                     Status = false
                 };
             }
-            if(user.PasswordHash==null)
+            if (user.PasswordHash == null)
             {
                 return new ChangePasswordResult
                 {
