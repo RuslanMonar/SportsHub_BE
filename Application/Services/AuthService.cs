@@ -17,8 +17,11 @@ namespace Application.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _config;
         private readonly IFacebookAuthService _facebookAuthService;
-        public AuthService(UserManager<AppUser> userManager, IConfiguration config, IFacebookAuthService facebookAuthService)
+        private readonly IUserAccessorService _userAccessorService;
+        public AuthService(UserManager<AppUser> userManager, IConfiguration config,
+                            IFacebookAuthService facebookAuthService, IUserAccessorService userAccessorService)
         {
+            _userAccessorService = userAccessorService;
             _config = config;
             _userManager = userManager;
             _facebookAuthService = facebookAuthService;
@@ -57,7 +60,7 @@ namespace Application.Services
         public async Task<AuthResult> LoginWithFacebookAsync(string accessToken)
         {
             var validatedTokenResult = await _facebookAuthService.ValidateAccessTokenAsync(accessToken);
-            if(!validatedTokenResult.Data.IsValid)
+            if (!validatedTokenResult.Data.IsValid)
             {
                 return new AuthResult
                 {
@@ -67,7 +70,7 @@ namespace Application.Services
             var userInfo = await _facebookAuthService.GetUserInfoAsync(accessToken);
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
 
-            if(user == null)
+            if (user == null)
             {
                 var newUser = new AppUser
                 {
@@ -79,7 +82,7 @@ namespace Application.Services
 
                 };
                 var createdResult = await _userManager.CreateAsync(newUser);
-                if(!createdResult.Succeeded)
+                if (!createdResult.Succeeded)
                 {
                     return new AuthResult
                     {
@@ -172,6 +175,52 @@ namespace Application.Services
 
             return tokenHandler.WriteToken(token);
 
+        }
+
+        public async Task<ChangePasswordResult> ChangePasswordAsync(string currentPassword, string newPassword)
+        {
+            if( currentPassword == newPassword)
+            {
+                return new ChangePasswordResult
+                {
+                    Errors = new[] { "The new password must be different from the old one" },
+                    Status = false
+                };
+            }
+            string userId = _userAccessorService.GetUserId();
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new ChangePasswordResult
+                {
+                    Errors = new[] { "User does not exist" },
+                    Status = false
+                };
+            }
+            if (user.PasswordHash == null)
+            {
+                return new ChangePasswordResult
+                {
+                    Errors = new[] { "Can't change password" },
+                    Status = false
+                };
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+            if (!result.Succeeded)
+            {
+                return new ChangePasswordResult
+                {
+                    Errors = result.Errors.Select(x => x.Description),
+                    Status = false
+                };
+            }
+
+            return new ChangePasswordResult
+            {
+                Status = true
+            };
         }
     }
 }
