@@ -8,5 +8,7 @@ namespace Application.Services
         Task<AuthResult> LoginAsync(string email, string password);
         Task<AuthResult> LoginWithFacebookAsync(string accessToken);
 
+        Task<AuthResult> AuthWithGoogleAsync(string email, string id, string firstName, string LastName, string imageUrl);
+
     }
 }

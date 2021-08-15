@@ -86,14 +86,11 @@ namespace Application.Services
                         Errors = new[] { "Something went wrong..." }
                     };
                 }
-                else
+                return new AuthResult
                 {
-                    return new AuthResult
-                    {
-                        Success = true,
-                        Token = CreateToken(newUser),
-                    };
-                }
+                    Success = true,
+                    Token = CreateToken(newUser),
+                };
             }
             else
             {
@@ -104,6 +101,45 @@ namespace Application.Services
                 };
             }
         }
+
+        public async Task<AuthResult> AuthWithGoogleAsync(string email, string id, string firstName, string lastName, string imageUrl)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                return new AuthResult
+                {
+                    Success = true,
+                    Token = CreateToken(user)
+                };
+            }
+
+            var newUser = new AppUser
+            {
+                Email = email,
+                FirstName = firstName,
+                LastName = lastName,
+                UserName = email,
+                Id = id
+            };
+
+            var createdUser = await _userManager.CreateAsync(newUser);
+            if (!createdUser.Succeeded)
+            {
+                return new AuthResult
+                {
+                    Errors = createdUser.Errors.Select(x => x.Description),
+                    Success = false
+                };
+            }
+
+            return new AuthResult
+            {
+                Success = true,
+                Token = CreateToken(newUser),
+
+            };
+        } 
 
         public async Task<AuthResult> RegisterAsync(string email, string password, string firstName, string LastName)
         {
