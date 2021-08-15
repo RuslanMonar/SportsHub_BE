@@ -177,8 +177,9 @@ namespace Application.Services
 
         }
 
-        public async Task<ChangePasswordResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        public async Task<ChangePasswordResult> ChangePasswordAsync(string currentPassword, string newPassword)
         {
+            string userId = _userAccessorService.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
@@ -192,7 +193,7 @@ namespace Application.Services
             {
                 return new ChangePasswordResult
                 {
-                    Errors = new[] { "Can’t change password" },
+                    Errors = new[] { "Can't change password" },
                     Status = false
                 };
             }
