@@ -17,8 +17,11 @@ namespace Application.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly IConfiguration _config;
         private readonly IFacebookAuthService _facebookAuthService;
-        public AuthService(UserManager<AppUser> userManager, IConfiguration config, IFacebookAuthService facebookAuthService)
+        private readonly IUserAccessorService _userAccessorService;
+        public AuthService(UserManager<AppUser> userManager, IConfiguration config,
+                            IFacebookAuthService facebookAuthService, IUserAccessorService userAccessorService)
         {
+            _userAccessorService = userAccessorService;
             _config = config;
             _userManager = userManager;
             _facebookAuthService = facebookAuthService;
@@ -57,7 +60,7 @@ namespace Application.Services
         public async Task<AuthResult> LoginWithFacebookAsync(string accessToken)
         {
             var validatedTokenResult = await _facebookAuthService.ValidateAccessTokenAsync(accessToken);
-            if(!validatedTokenResult.Data.IsValid)
+            if (!validatedTokenResult.Data.IsValid)
             {
                 return new AuthResult
                 {
@@ -67,7 +70,7 @@ namespace Application.Services
             var userInfo = await _facebookAuthService.GetUserInfoAsync(accessToken);
             var user = await _userManager.FindByEmailAsync(userInfo.Email);
 
-            if(user == null)
+            if (user == null)
             {
                 var newUser = new AppUser
                 {
@@ -79,7 +82,7 @@ namespace Application.Services
 
                 };
                 var createdResult = await _userManager.CreateAsync(newUser);
-                if(!createdResult.Succeeded)
+                if (!createdResult.Succeeded)
                 {
                     return new AuthResult
                     {
