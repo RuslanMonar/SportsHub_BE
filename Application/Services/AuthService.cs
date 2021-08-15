@@ -179,6 +179,14 @@ namespace Application.Services
 
         public async Task<ChangePasswordResult> ChangePasswordAsync(string currentPassword, string newPassword)
         {
+            if( currentPassword == newPassword)
+            {
+                return new ChangePasswordResult
+                {
+                    Errors = new[] { "The new password must be different from the old one" },
+                    Status = false
+                };
+            }
             string userId = _userAccessorService.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
