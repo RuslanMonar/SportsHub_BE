@@ -176,5 +176,42 @@ namespace Application.Services
             return tokenHandler.WriteToken(token);
 
         }
+
+        public async Task<ChangePasswordResult> ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return new ChangePasswordResult
+                {
+                    Errors = new[] { "User does not exist" },
+                    Status = false
+                };
+            }
+            if (user.PasswordHash == null)
+            {
+                return new ChangePasswordResult
+                {
+                    Errors = new[] { "Can’t change password" },
+                    Status = false
+                };
+            }
+
+            var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+            if (!result.Succeeded)
+            {
+                return new ChangePasswordResult
+                {
+                    Errors = result.Errors.Select(x => x.Description),
+                    Status = false
+                };
+            }
+
+            return new ChangePasswordResult
+            {
+                Status = true
+            };
+        }
     }
 }
