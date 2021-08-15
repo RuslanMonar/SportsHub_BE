@@ -49,6 +49,7 @@ namespace API
             services.AddSingleton(facebookAuthSettings);
             services.AddHttpClient();
             services.AddSingleton<IFacebookAuthService, FacebookAuthService>();
+            services.AddScoped<IUserAccessorService, UserAccessorService>();
 
 
             services.AddSwaggerGen(c =>
@@ -61,7 +62,7 @@ namespace API
                 Opt.AddPolicy("CorsPolicy", policy =>
                  {
                      policy.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin();//.WithOrigins("http://localhost:3000");
-                });
+                 });
             });
         }
 
