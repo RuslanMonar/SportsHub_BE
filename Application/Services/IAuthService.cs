@@ -1,3 +1,4 @@
+using Domain;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -8,5 +9,7 @@ namespace Application.Services
         Task<AuthResult> LoginAsync(string email, string password);
         Task<ChangePasswordResult> ChangePasswordAsync(string currentPassword, string newPassword);
         Task<AuthResult> LoginWithFacebookAsync(string accessToken);
+
+        Task<AppUser> GetUserAsync();
     }
 }
