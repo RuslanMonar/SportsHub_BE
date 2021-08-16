@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Application.FacebookResult
+﻿namespace Application.FacebookResult
 {
    
     public class FacebookAuthSettings
