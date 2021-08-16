@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
@@ -152,18 +153,19 @@ namespace API.Controllers
             {
                 var receivedUser = await _authService.GetUserAsync();
                 return Ok(new
-                { 
-                FirstName = receivedUser.FirstName,
-                LastName = receivedUser.LastName,
-                ImageUrl = receivedUser.Image,
-                Email = receivedUser.Email
-                }
+                    {
+                        FirstName = receivedUser.FirstName,
+                        LastName = receivedUser.LastName,
+                        ImageUrl = receivedUser.Image,
+                        Email = receivedUser.Email
+                    }
                 );
             }
             catch (Exception exc)
             {
                 return BadRequest(exc);
             }
+        }
 
         [HttpPost]
         [Route("GoogleLogin")]
@@ -185,6 +187,4 @@ namespace API.Controllers
 
         }
     }
-
-
 }
