@@ -1,13 +1,11 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
-using Application;
-using Application.FacebookResult;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Application;
 
 
 
@@ -145,6 +143,7 @@ namespace API.Controllers
             }
         }
 
+
         [HttpGet]
         [Route("user/get")]
         public async Task<IActionResult> GetUser()
@@ -165,6 +164,27 @@ namespace API.Controllers
             {
                 return BadRequest(exc);
             }
+
+        [HttpPost]
+        [Route("GoogleLogin")]
+        public async Task<ActionResult<AuthDto>> GoogleLogin(UserGoogleDto user)
+        {
+            var authResponse = await _authService.AuthWithGoogleAsync(user.Email, user.Id, user.FirstName, user.LastName, user.ImageUrl);
+            if (authResponse.Success)
+            {
+                return Ok(new AuthDto
+                {
+
+                    Token = authResponse.Token
+                });
+            }
+            return BadRequest(new AuthDto
+            {
+                Errors = authResponse.Errors
+            });
+
         }
     }
+
+
 }

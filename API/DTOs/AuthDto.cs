@@ -4,7 +4,7 @@ namespace API.DTOs
 {
     public class AuthDto
     {
-        //info that returns to the user after successfull login/refister
+        //info that returns to the user after successfull login/register
        
         public string Token { get; set; }
 
