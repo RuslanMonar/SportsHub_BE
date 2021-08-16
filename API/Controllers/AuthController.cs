@@ -143,6 +143,28 @@ namespace API.Controllers
             }
         }
 
+
+        [HttpGet]
+        [Route("user/get")]
+        public async Task<IActionResult> GetUser()
+        {
+            try
+            {
+                var receivedUser = await _authService.GetUserAsync();
+                return Ok(new
+                { 
+                FirstName = receivedUser.FirstName,
+                LastName = receivedUser.LastName,
+                ImageUrl = receivedUser.Image,
+                Email = receivedUser.Email
+                }
+                );
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc);
+            }
+
         [HttpPost]
         [Route("GoogleLogin")]
         public async Task<ActionResult<AuthDto>> GoogleLogin(UserGoogleDto user)
@@ -160,6 +182,7 @@ namespace API.Controllers
             {
                 Errors = authResponse.Errors
             });
+
         }
     }
 
