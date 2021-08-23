@@ -8,8 +8,15 @@ namespace Data
 {
     public class Seed
     {
-        public static async Task SeedData(DataContext context, UserManager<AppUser> userManager)
+        public static async Task SeedData(DataContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
+            if(!await roleManager.RoleExistsAsync("Admin"))
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+                var admin = new AppUser{UserName="AdminUN",Email = "admin@test.com", FirstName = "FAdmin", LastName = "LAdmin"};
+                await userManager.CreateAsync(admin, "PassworD1!");
+                await userManager.AddToRoleAsync(admin, "Admin");
+            }
             if (!userManager.Users.Any())
             {
                 var users = new List<AppUser>
