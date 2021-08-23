@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Application
 {
-    public class AuthResult
+    public class AuthResult: IResult
     {
         public string Token { get; set; }
 

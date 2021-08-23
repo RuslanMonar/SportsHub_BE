@@ -1,12 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Application
 {
-    public class ChangePasswordResult: IResult
+    public class StandartResult: IResult
     {
-        public bool Status { get; set; }
-
         public IEnumerable<string> Errors { get; set; }
 
         public bool Success { get; set; }
