@@ -7,7 +7,7 @@ namespace Application
 {
     public class ChangePasswordResult
     {
-        public bool Status { get; set; }
+        public bool Success { get; set; }
 
         public IEnumerable<string> Errors { get; set; }
     }
