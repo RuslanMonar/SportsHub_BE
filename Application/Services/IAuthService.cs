@@ -11,8 +11,6 @@ namespace Application.Services
         Task<AuthResult> LoginWithFacebookAsync(string accessToken);
 
 
-        Task<AppUser> GetUserAsync();
-
         Task<AuthResult> AuthWithGoogleAsync(string email, string id, string firstName, string LastName, string imageUrl);
 
     }
