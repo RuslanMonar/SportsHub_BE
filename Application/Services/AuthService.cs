@@ -220,7 +220,7 @@ namespace Application.Services
                 return new ChangePasswordResult
                 {
                     Errors = new[] { "The new password must be different from the old one" },
-                    Status = false
+                    Success = false
                 };
             }
             string userId = _userAccessorService.GetUserId();
@@ -230,7 +230,7 @@ namespace Application.Services
                 return new ChangePasswordResult
                 {
                     Errors = new[] { "User does not exist" },
-                    Status = false
+                    Success = false
                 };
             }
             if (user.PasswordHash == null)
@@ -238,7 +238,7 @@ namespace Application.Services
                 return new ChangePasswordResult
                 {
                     Errors = new[] { "Can't change password" },
-                    Status = false
+                    Success = false
                 };
             }
 
@@ -249,13 +249,13 @@ namespace Application.Services
                 return new ChangePasswordResult
                 {
                     Errors = result.Errors.Select(x => x.Description),
-                    Status = false
+                    Success = false
                 };
             }
 
             return new ChangePasswordResult
             {
-                Status = true
+                Success = true
             };
         }
 

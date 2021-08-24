@@ -103,11 +103,11 @@ namespace API.Controllers
             }
 
             var authResponse = await _authService.ChangePasswordAsync(changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
-            if (authResponse.Status)
+            if (authResponse.Success)
             {
                 return Ok(new ChangePasswordResult
                 {
-                    Status = authResponse.Status
+                    Success = authResponse.Success
                 });
             }
             else
