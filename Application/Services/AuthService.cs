@@ -213,32 +213,32 @@ namespace Application.Services
 
         }
 
-        public async Task<ChangePasswordResult> ChangePasswordAsync(string currentPassword, string newPassword)
+        public async Task<Result> ChangePasswordAsync(string currentPassword, string newPassword)
         {
             if( currentPassword == newPassword)
             {
-                return new ChangePasswordResult
+                return new Result
                 {
                     Errors = new[] { "The new password must be different from the old one" },
-                    Status = false
+                    Success = false
                 };
             }
             string userId = _userAccessorService.GetUserId();
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return new ChangePasswordResult
+                return new Result
                 {
                     Errors = new[] { "User does not exist" },
-                    Status = false
+                    Success = false
                 };
             }
             if (user.PasswordHash == null)
             {
-                return new ChangePasswordResult
+                return new Result
                 {
                     Errors = new[] { "Can't change password" },
-                    Status = false
+                    Success = false
                 };
             }
 
@@ -246,16 +246,16 @@ namespace Application.Services
 
             if (!result.Succeeded)
             {
-                return new ChangePasswordResult
+                return new Result
                 {
                     Errors = result.Errors.Select(x => x.Description),
-                    Status = false
+                    Success = false
                 };
             }
 
-            return new ChangePasswordResult
+            return new Result
             {
-                Status = true
+                Success = true
             };
         }
 

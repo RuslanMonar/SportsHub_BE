@@ -7,7 +7,7 @@ namespace Application.Services
     {
         Task<AuthResult> RegisterAsync(string email, string password, string firstName, string LastName);
         Task<AuthResult> LoginAsync(string email, string password);
-        Task<ChangePasswordResult> ChangePasswordAsync(string currentPassword, string newPassword);
+        Task<Result> ChangePasswordAsync(string currentPassword, string newPassword);
         Task<AuthResult> LoginWithFacebookAsync(string accessToken);
 
 

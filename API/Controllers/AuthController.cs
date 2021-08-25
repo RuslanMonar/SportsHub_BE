@@ -91,27 +91,27 @@ namespace API.Controllers
         [HttpPost]
         [Route("changePassword")]
         [Authorize]
-        public async Task<ActionResult<ChangePasswordResult>> ChangePassword(ChangePasswordDto changePasswordDto)
+        public async Task<ActionResult<Result>> ChangePassword(ChangePasswordDto changePasswordDto)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(new ChangePasswordResult
+                return BadRequest(new Result
                 {
                     Errors = ModelState.Values.SelectMany(x => x.Errors.Select(a => a.ErrorMessage))
                 });
             }
 
             var authResponse = await _authService.ChangePasswordAsync(changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
-            if (authResponse.Status)
+            if (authResponse.Success)
             {
-                return Ok(new ChangePasswordResult
+                return Ok(new Result
                 {
-                    Status = authResponse.Status
+                    Success = authResponse.Success
                 });
             }
             else
             {
-                return BadRequest(new ChangePasswordResult
+                return BadRequest(new Result
                 {
                     Errors = authResponse.Errors
                 });
