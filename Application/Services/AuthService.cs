@@ -268,24 +268,6 @@ namespace Application.Services
             };
         }
 
-        public async Task<AppUser> GetUserAsync()
-        {
-
-            var user = await _userManager.FindByIdAsync(_userAccessorService.GetUserId());
-
-            if (user == null)
-            {
-                throw new Exception("User does not exists");
-            }
-
-            return new AppUser
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Image = user.Image
-            };
-        }
 
     }
 }

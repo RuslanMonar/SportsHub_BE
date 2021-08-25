@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using API.DTOs;
 using Application.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Application;
 
@@ -141,29 +140,6 @@ namespace API.Controllers
                 {
                     Errors = authResponse.Errors
                 });
-            }
-        }
-
-
-        [HttpGet]
-        [Route("user/get")]
-        public async Task<IActionResult> GetUser()
-        {
-            try
-            {
-                var receivedUser = await _authService.GetUserAsync();
-                return Ok(new
-                    {
-                        FirstName = receivedUser.FirstName,
-                        LastName = receivedUser.LastName,
-                        ImageUrl = receivedUser.Image,
-                        Email = receivedUser.Email
-                    }
-                );
-            }
-            catch (Exception exc)
-            {
-                return BadRequest(exc);
             }
         }
 
