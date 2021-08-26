@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Application.Faker;
 using Data;
 using Domain;
 using Microsoft.AspNetCore.Hosting;
@@ -20,10 +21,11 @@ namespace API
             var services = scope.ServiceProvider;
             var context = services.GetRequiredService<DataContext>();
             var userManager = services.GetRequiredService<UserManager<AppUser>>();
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
             await context.Database.MigrateAsync();
-            await Seed.SeedData(context, userManager);
-
-
+            await Seed.SeedData(context, userManager, roleManager);
+            await UsersFaker.GenerateUsers(userManager);
+            
 
             await host.RunAsync();
         }

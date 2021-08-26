@@ -53,7 +53,7 @@ namespace Application.Services
             return new AuthResult
             {
                 Success = true,
-                Token = CreateToken(user),
+                Token = await CreateToken(user),
             };
         }
 
@@ -92,7 +92,7 @@ namespace Application.Services
                 return new AuthResult
                 {
                     Success = true,
-                    Token = CreateToken(newUser),
+                    Token = await CreateToken(newUser),
                 };
             }
             else
@@ -100,7 +100,7 @@ namespace Application.Services
                 return new AuthResult
                 {
                     Success = true,
-                    Token = CreateToken(user),
+                    Token = await CreateToken(user),
                 };
             }
         }
@@ -113,7 +113,7 @@ namespace Application.Services
                 return new AuthResult
                 {
                     Success = true,
-                    Token = CreateToken(user)
+                    Token = await CreateToken(user)
                 };
             }
 
@@ -137,7 +137,7 @@ namespace Application.Services
             return new AuthResult
             {
                 Success = true,
-                Token = CreateToken(newUser),
+                Token = await CreateToken(newUser),
 
             };
         } 
@@ -176,13 +176,13 @@ namespace Application.Services
             return new AuthResult
             {
                 Success = true,
-                Token = CreateToken(newUser),
+                Token = await CreateToken(newUser),
 
             };
 
         }
 
-        private string CreateToken(AppUser user)
+        private async Task<string> CreateToken(AppUser user)
         {
             var claims = new List<Claim>
             {
@@ -190,6 +190,15 @@ namespace Application.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email)
             };
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+            if (userRoles.Count > 0)
+            {
+                foreach (var role in userRoles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+            }
 
             //var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("say_hello_to_my_little_friend"));
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["TokenKey"]));
