@@ -122,10 +122,8 @@ namespace Application.Services
                 Email = email,
                 FirstName = firstName,
                 LastName = lastName,
-                UserName = email,
                 Id = id
             };
-
             var createdUser = await _userManager.CreateAsync(newUser);
             if (!createdUser.Succeeded)
             {
@@ -222,11 +220,11 @@ namespace Application.Services
 
         }
 
-        public async Task<ChangePasswordResult> ChangePasswordAsync(string currentPassword, string newPassword)
+        public async Task<Result> ChangePasswordAsync(string currentPassword, string newPassword)
         {
             if( currentPassword == newPassword)
             {
-                return new ChangePasswordResult
+                return new Result
                 {
                     Errors = new[] { "The new password must be different from the old one" },
                     Success = false
@@ -236,7 +234,7 @@ namespace Application.Services
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return new ChangePasswordResult
+                return new Result
                 {
                     Errors = new[] { "User does not exist" },
                     Success = false
@@ -244,7 +242,7 @@ namespace Application.Services
             }
             if (user.PasswordHash == null)
             {
-                return new ChangePasswordResult
+                return new Result
                 {
                     Errors = new[] { "Can't change password" },
                     Success = false
@@ -255,14 +253,14 @@ namespace Application.Services
 
             if (!result.Succeeded)
             {
-                return new ChangePasswordResult
+                return new Result
                 {
                     Errors = result.Errors.Select(x => x.Description),
                     Success = false
                 };
             }
 
-            return new ChangePasswordResult
+            return new Result
             {
                 Success = true
             };

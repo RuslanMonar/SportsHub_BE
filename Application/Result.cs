@@ -2,7 +2,7 @@
 
 namespace Application
 {
-    public class StandartResult: IResult
+    public class Result
     {
         public IEnumerable<string> Errors { get; set; }
 
