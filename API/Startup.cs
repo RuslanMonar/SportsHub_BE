@@ -2,9 +2,11 @@ using System.Configuration;
 using API.Extensions;
 using Application.FacebookResult;
 using Application.Services;
+using Application.Services.EmailService;
 using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,7 +47,21 @@ namespace API
             services.AddSingleton<IFacebookAuthService, FacebookAuthService>();
             services.AddScoped<IUserAccessorService, UserAccessorService>();
 
+            // email service config
 
+            var emailConfig = _config
+                .GetSection("EmailConfig")
+                .Get<EmailConfig>();
+            services.AddSingleton(emailConfig);
+
+            services.AddScoped<IEmailSender, EmailSender>();
+
+            services.Configure<FormOptions>(o =>
+            {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
 
             services.AddSwaggerGen(c =>
             {
