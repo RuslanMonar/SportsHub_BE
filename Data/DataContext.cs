@@ -6,7 +6,11 @@ namespace Data
 {
     public class DataContext : IdentityDbContext<AppUser>
     {
-        public DataContext(DbContextOptions options) : base(options)
+        public DataContext() : base()
+        {
+        }
+
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
     }

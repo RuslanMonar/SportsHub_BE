@@ -32,7 +32,7 @@ namespace API
         {
 
             services.AddControllers();
-            services.AddDbContext<DataContext>(opt => opt.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<DataContext>(opt => opt.UseNpgsql(_config.GetConnectionString("DefaultConnection")));
             services.AddIdentityServices(_config);
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
