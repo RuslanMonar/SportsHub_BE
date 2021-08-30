@@ -23,7 +23,7 @@ namespace API.Controllers
         public async Task<IActionResult> UpdateInfo(UserDto user)
         {
             var updateResult = await _userService.UpdateUserAsync(
-                user.FirstName, user.LastName, user.Email, user.ImageUrl
+                user.FirstName, user.LastName, user.Email
                 );
 
             if (!updateResult.Success)
@@ -41,11 +41,10 @@ namespace API.Controllers
             try
             {
                 var receivedUser = await _userService.GetUserAsync();
-                return Ok(new
+                return Ok(new UserDto
                 {
                     FirstName = receivedUser.FirstName,
                     LastName = receivedUser.LastName,
-                    ImageUrl = receivedUser.Image,
                     Email = receivedUser.Email
                 }
                 );
