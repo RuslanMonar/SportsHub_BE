@@ -50,7 +50,7 @@ namespace Application.Services
             {
                 return new AuthResult
                 {
-                    Errors = new[] { "Password is wrong" },                
+                    Errors = new[] { "Password is wrong" },
                     Success = false
                 };
             }
@@ -70,7 +70,7 @@ namespace Application.Services
                 return new AuthResult
                 {
                     Errors = new[] { "Invalid Facebook Token!" }
-   
+
                 };
             }
             var userInfo = await _facebookAuthService.GetUserInfoAsync(accessToken);
@@ -92,7 +92,7 @@ namespace Application.Services
                 {
                     return new AuthResult
                     {
-                       Errors = new[] { "Something went wrong..." }               
+                        Errors = new[] { "Something went wrong..." }
                     };
                 }
                 return new AuthResult
@@ -156,7 +156,7 @@ namespace Application.Services
             {
                 return new AuthResult
                 {
-                    Errors = new[] { "User with this email already exists" },            
+                    Errors = new[] { "User with this email already exists" },
                     Success = false
                 };
             }
@@ -234,8 +234,8 @@ namespace Application.Services
             {
                 return new Result
                 {
-                   Errors = new[] { "The new password must be different from the old one" },
-                  
+                    Errors = new[] { "The new password must be different from the old one" },
+
                     Success = false
                 };
             }
@@ -246,7 +246,7 @@ namespace Application.Services
                 return new Result
                 {
                     Errors = new[] { "User does not exist" },
-   
+
                     Success = false
                 };
             }
@@ -254,8 +254,8 @@ namespace Application.Services
             {
                 return new Result
                 {
-                   Errors = new[] { "Can't change password" },
-                   
+                    Errors = new[] { "Can't change password" },
+
                     Success = false
                 };
             }
@@ -285,22 +285,22 @@ namespace Application.Services
                 return new Result
                 {
                     Errors = new[] { "User does not exist" },
-                    
+
                     Success = false
                 };
             }
 
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-         
+
             try
             {
                 var message = new Message(new string[] { email }, "SportsHub, Reset Password", resetToken, null);
                 await _emailSender.SendEmailAsync(message);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                 return new Result
+                return new Result
                 {
                     Errors = new[] { ex.Message },
                     Success = false
@@ -308,9 +308,45 @@ namespace Application.Services
             }
             return new Result
             {
-                Errors=null,
+                Errors = null,
                 Success = true
             };
         }
+
+        public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return new Result
+                {
+                    Errors = new[] { "User does not exist" },
+
+                    Success = false
+                };
+            }
+
+             var resetPassResult = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+             if(!resetPassResult.Succeeded)
+             {
+                 return new Result
+                 {
+                    Errors = new []{"tmp error"},
+                    Success = false
+                 };
+             }
+             else
+             {
+                 return new Result
+                 {
+                     Success = true
+                 };
+             }
+
+        }
     }
+
+
 }

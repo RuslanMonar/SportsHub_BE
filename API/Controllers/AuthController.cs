@@ -169,7 +169,15 @@ namespace API.Controllers
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
         {
             var a = await _authService.SendResetTokenAsync(forgotPasswordDto.Email);
-            
+
+            return Ok(a);
+        }
+
+        [HttpPost]
+        [Route("reset")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var a = await _authService.ResetPasswordAsync(resetPasswordDto.Email, resetPasswordDto.Token, resetPasswordDto.NewPassword);
             return Ok(a);
         }
     }
