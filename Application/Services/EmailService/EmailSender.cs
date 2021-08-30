@@ -56,7 +56,7 @@ namespace Application.Services.EmailService
             emailMessage.To.AddRange(message.To);
             emailMessage.Subject = message.Subject;
 
-            var bodyBuilder = new BodyBuilder { HtmlBody = string.Format("<h2 style='color:red;'>{0}</h2>", message.Content) };
+            var bodyBuilder = new BodyBuilder { HtmlBody = string.Format("<p>{0}</p>", message.Content) };
 
             if (message.Attachments != null && message.Attachments.Any())
             {

@@ -168,17 +168,32 @@ namespace API.Controllers
         [Route("forgot")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
         {
-            var a = await _authService.SendResetTokenAsync(forgotPasswordDto.Email);
+            var result = await _authService.SendResetTokenAsync(forgotPasswordDto.Email);
+            if(!result.Success)
+            {
+                return BadRequest(new Result
+                {
+                    Errors = result.Errors
+                });
+            }
 
-            return Ok(a);
+            return Ok();
         }
 
         [HttpPost]
         [Route("reset")]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
         {
-            var a = await _authService.ResetPasswordAsync(resetPasswordDto.Email, resetPasswordDto.Token, resetPasswordDto.NewPassword);
-            return Ok(a);
+            var result = await _authService.ResetPasswordAsync(resetPasswordDto.Email, resetPasswordDto.Token, resetPasswordDto.NewPassword);
+            if(!result.Success)
+            {
+                return BadRequest(new Result
+                {
+                    Errors = result.Errors
+                });
+            }
+
+            return Ok();
         }
     }
 }
