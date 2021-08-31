@@ -10,7 +10,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
 using ConfigurationSection = System.Configuration.ConfigurationSection;
+using Domain;
 
 namespace API
 {
@@ -44,6 +46,10 @@ namespace API
             services.AddHttpClient();
             services.AddSingleton<IFacebookAuthService, FacebookAuthService>();
             services.AddScoped<IUserAccessorService, UserAccessorService>();
+
+            services.AddDefaultIdentity<AppUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<DataContext>();
 
 
 

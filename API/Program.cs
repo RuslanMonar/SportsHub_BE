@@ -22,6 +22,16 @@ namespace API
             var context = services.GetRequiredService<DataContext>();
             var userManager = services.GetRequiredService<UserManager<AppUser>>();
             var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            if (!await roleManager.RoleExistsAsync("Admin"))
+            {
+                var AdminRole = new IdentityRole("Admin");
+                await roleManager.CreateAsync(AdminRole);
+            }
+            if (!await roleManager.RoleExistsAsync("User"))
+            {
+                var UserRole = new IdentityRole("User");
+                await roleManager.CreateAsync(UserRole);
+            }
             await context.Database.MigrateAsync();
             await Seed.SeedData(context, userManager, roleManager);
             await UsersFaker.GenerateUsers(userManager);

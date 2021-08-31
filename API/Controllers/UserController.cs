@@ -4,18 +4,23 @@ using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System;
+using Application;
+using Microsoft.AspNetCore.Identity;
+using Domain;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    // postman tests [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly UserManager<AppUser> _userManager;
+        public UserController(IUserService userService, UserManager<AppUser> userManager)
         {
             _userService = userService;
+            _userManager = userManager;
         }
 
         [HttpPost]
@@ -53,6 +58,34 @@ namespace API.Controllers
             {
                 return BadRequest(exc);
             }
+        }
+
+        
+        [HttpPost]
+        [Route("GiveAdminPermission")]
+        public async Task<IActionResult> AddAdmin(UpdateToAdminResult updateToAdmin)
+        {
+            var user = await _userManager.FindByEmailAsync(updateToAdmin.Email);
+            
+            if (user == null) return NotFound();
+            await _userManager.RemoveFromRoleAsync(user, "User");
+            await _userManager.AddToRoleAsync(user, "Admin");
+
+            return Ok(user);
+        }
+
+
+        [HttpPost]
+        [Route("RemoveAdminPermission")]
+        public async Task<IActionResult> RemoveAdmin(UpdateToAdminResult removeAdmin)
+        {
+            var user = await _userManager.FindByEmailAsync(removeAdmin.Email);
+
+            if (user == null) return NotFound();
+            await _userManager.RemoveFromRoleAsync(user, "Admin");
+            await _userManager.AddToRoleAsync(user, "User");
+
+            return Ok(user);
         }
 
     }
