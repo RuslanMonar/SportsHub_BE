@@ -17,7 +17,5 @@ namespace Application.Services
 
         Task<Result> ResetPasswordAsync(string email, string token, string newPassword);
 
-        
-
     }
 }
