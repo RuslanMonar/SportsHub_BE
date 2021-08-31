@@ -166,10 +166,11 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("forgot")]
+        [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
         {
             var result = await _authService.SendResetTokenAsync(forgotPasswordDto.Email);
-            if(!result.Success)
+            if (!result.Success)
             {
                 return BadRequest(new Result
                 {
@@ -182,10 +183,11 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("reset")]
+        [AllowAnonymous]
         public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
         {
             var result = await _authService.ResetPasswordAsync(resetPasswordDto.Email, resetPasswordDto.Token, resetPasswordDto.NewPassword);
-            if(!result.Success)
+            if (!result.Success)
             {
                 return BadRequest(new Result
                 {
