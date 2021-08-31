@@ -15,11 +15,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-
-
-
-    /*[Authorize(Roles = "Admin")]*/
-
+    [Authorize(Roles = "Admin")]
 
     public class UsersController : ControllerBase
     {
@@ -50,7 +46,7 @@ namespace API.Controllers
             }
             return BadRequest(new Result
             {
-                Errors = new[] {"Search name is empty"}
+                Errors = new[] { "Search name is empty" }
             });
         }
 
@@ -82,9 +78,9 @@ namespace API.Controllers
             {
                 return BadRequest(exc);
             }
-         }
+        }
 
-        
+
         [HttpPut]
         [Route("ChangeStatus")]
         public async Task<IActionResult> ChangeStatus(ChangeStatusDto data)
@@ -105,6 +101,28 @@ namespace API.Controllers
                 });
 
             }
+        }
+
+        [HttpDelete]
+        [Route("DeleteUser")]
+        public async Task<ActionResult<Result>> DeleteUser(DeleteUserDto id)
+        {
+            var deleteUser = await _userService.DeleteUserAsync(id.Id);
+            if (deleteUser.Success)
+            {
+                return Ok(new Result
+                {
+                    Success = deleteUser.Success
+                });
+            }
+            else
+            {
+                return BadRequest(new Result
+                {
+                    Errors = deleteUser.Errors
+                });
+            }
+
         }
     }
 }

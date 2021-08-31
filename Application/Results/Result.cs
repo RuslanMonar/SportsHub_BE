@@ -7,5 +7,6 @@ namespace Application
         public IEnumerable<string> Errors { get; set; }
 
         public bool Success { get; set; }
+
     }
 }

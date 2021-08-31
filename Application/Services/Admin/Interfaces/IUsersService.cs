@@ -13,5 +13,6 @@ namespace Application.Services.Admin.Interfaces
 
         Task<Result> ChangeStatus(string id);
 
+        Task<Result> DeleteUserAsync(string id);
     }
 }
