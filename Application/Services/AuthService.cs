@@ -333,7 +333,7 @@ namespace Application.Services
              {
                  return new Result
                  {
-                    Errors = new []{"tmp error"},
+                    Errors = resetPassResult.Errors.Select(x=>x.Description),
                     Success = false
                  };
              }
