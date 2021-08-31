@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Services.EmailService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -18,9 +19,11 @@ namespace API.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IEmailSender _emailSender;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IEmailSender emailSender)
         {
+            _emailSender = emailSender;
             _logger = logger;
         }
         [Authorize(Roles = "Admin")]
@@ -35,6 +38,18 @@ namespace API.Controllers
                 Summary = Summaries[rng.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        [Route("testemail")]
+        public async Task<IActionResult> TestSendMail()
+        {
+          
+            var message = new Message(new string[] { "boyyou481@gmail.com" }, "Test email", "HELLO HTML.", null);
+            await _emailSender.SendEmailAsync(message);
+            return Ok();
+       
         }
     }
 }
