@@ -3,6 +3,8 @@ using System.Configuration;
 using API.Extensions;
 using Application.FacebookResult;
 using Application.Services;
+using Application.Services.Admin;
+using Application.Services.Admin.Interfaces;
 using Application.Services.EmailService;
 using Data;
 using Microsoft.AspNetCore.Builder;
@@ -39,6 +41,7 @@ namespace API
             services.AddIdentityServices(_config);
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUsersService , UsersService>();
 
             // facebook auth install
             var facebookAuthSettings = new FacebookAuthSettings();
