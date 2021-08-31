@@ -128,10 +128,8 @@ namespace Application.Services
                 Email = email,
                 FirstName = firstName,
                 LastName = lastName,
-                UserName = email,
                 Id = id
             };
-
             var createdUser = await _userManager.CreateAsync(newUser);
             if (!createdUser.Succeeded)
             {
