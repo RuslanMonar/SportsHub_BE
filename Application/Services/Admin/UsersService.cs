@@ -27,9 +27,10 @@ namespace Application.Services.Admin
 
             if (!String.IsNullOrEmpty(name))
             {
-                //Якшо name містить firstName lastName
+                //Якшо name містить firstName lastName 
                 if (name.Any(x => Char.IsWhiteSpace(x)))
                 {
+                    
                     var names = Regex.Split(name, @"\s+"); //Видаляю всі пробіли між firstName і lastName
                     string firstName = names[0];
                     string lastName = names[1];
@@ -43,11 +44,11 @@ namespace Application.Services.Admin
                             Id = user.Id,
                             FirstName = user.FirstName,
                             LastName = user.LastName,
-                            Image = user.Image
+                            Image = null
                         })
                         .ToListAsync();
                 }
-                //Якшо name містить тільки firstName або lastName
+                //Якшо name містить тільки firstName або lastName 
                 else
                 {
                     users = await _userManager.Users
@@ -59,7 +60,7 @@ namespace Application.Services.Admin
                                 Id = user.Id,
                                 FirstName = user.FirstName,
                                 LastName = user.LastName,
-                                Image = user.Image
+                                Image = null
                             })
                         .ToListAsync();
                 }

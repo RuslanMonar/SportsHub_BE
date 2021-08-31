@@ -29,7 +29,7 @@ namespace Application.Services
             {
                 return new Result {
                     Success = false,
-                    Errors = new List<string> { "User does not exists." }
+                    Errors = new [] { "User does not exists." }
                 };
             }
 
@@ -71,7 +71,7 @@ namespace Application.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Image = user.Image
+              
             };
         }
     }

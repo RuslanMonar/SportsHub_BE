@@ -13,5 +13,11 @@ namespace Application.Services
 
         Task<AuthResult> AuthWithGoogleAsync(string email, string id, string firstName, string LastName, string imageUrl);
 
+        Task<Result> SendResetTokenAsync(string email);
+
+        Task<Result> ResetPasswordAsync(string email, string token, string newPassword);
+
+        
+
     }
 }

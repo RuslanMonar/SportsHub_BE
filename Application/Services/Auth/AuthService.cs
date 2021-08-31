@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Application.Services.EmailService;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -18,9 +19,12 @@ namespace Application.Services
         private readonly IConfiguration _config;
         private readonly IFacebookAuthService _facebookAuthService;
         private readonly IUserAccessorService _userAccessorService;
+        private readonly IEmailSender _emailSender;
         public AuthService(UserManager<AppUser> userManager, IConfiguration config,
-                            IFacebookAuthService facebookAuthService, IUserAccessorService userAccessorService)
+
+                    IFacebookAuthService facebookAuthService, IUserAccessorService userAccessorService, IEmailSender emailSender)
         {
+            _emailSender = emailSender;
             _userAccessorService = userAccessorService;
             _config = config;
             _userManager = userManager;
@@ -35,6 +39,7 @@ namespace Application.Services
                 return new AuthResult
                 {
                     Errors = new[] { "User does not exist" },
+
                     Success = false
                 };
             }
@@ -65,6 +70,7 @@ namespace Application.Services
                 return new AuthResult
                 {
                     Errors = new[] { "Invalid Facebook Token!" }
+
                 };
             }
             var userInfo = await _facebookAuthService.GetUserInfoAsync(accessToken);
@@ -140,7 +146,7 @@ namespace Application.Services
                 Token = await CreateToken(newUser),
 
             };
-        } 
+        }
 
         public async Task<AuthResult> RegisterAsync(string email, string password, string firstName, string LastName)
         {
@@ -222,11 +228,12 @@ namespace Application.Services
 
         public async Task<Result> ChangePasswordAsync(string currentPassword, string newPassword)
         {
-            if( currentPassword == newPassword)
+            if (currentPassword == newPassword)
             {
                 return new Result
                 {
                     Errors = new[] { "The new password must be different from the old one" },
+
                     Success = false
                 };
             }
@@ -237,6 +244,7 @@ namespace Application.Services
                 return new Result
                 {
                     Errors = new[] { "User does not exist" },
+
                     Success = false
                 };
             }
@@ -245,6 +253,7 @@ namespace Application.Services
                 return new Result
                 {
                     Errors = new[] { "Can't change password" },
+
                     Success = false
                 };
             }
@@ -266,6 +275,76 @@ namespace Application.Services
             };
         }
 
+        public async Task<Result> SendResetTokenAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return new Result
+                {
+                    Errors = new[] { "User does not exist" },
 
+                    Success = false
+                };
+            }
+
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+
+            try
+            {
+                var message = new Message(new string[] { email }, "SportsHub, Reset Password", "https://localhost:3000/recovery?token="+resetToken, null);
+                await _emailSender.SendEmailAsync(message);
+            }
+            catch (Exception ex)
+            {
+                return new Result
+                {
+                    Errors = new[] { ex.Message },
+                    Success = false
+                };
+            }
+            return new Result
+            {
+                Errors = null,
+                Success = true
+            };
+        }
+
+        public async Task<Result> ResetPasswordAsync(string email, string token, string newPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                return new Result
+                {
+                    Errors = new[] { "User does not exist" },
+
+                    Success = false
+                };
+            }
+
+             var resetPassResult = await _userManager.ResetPasswordAsync(user, token, newPassword);
+
+             if(!resetPassResult.Succeeded)
+             {
+                 return new Result
+                 {
+                    Errors = resetPassResult.Errors.Select(x=>x.Description),
+                    Success = false
+                 };
+             }
+             else
+             {
+                 return new Result
+                 {
+                     Success = true
+                 };
+             }
+
+        }
     }
+
+
 }

@@ -14,7 +14,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    /*[Authorize(Roles = "Admin")]*/
+    [Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _userService;

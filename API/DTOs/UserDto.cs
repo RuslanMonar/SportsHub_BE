@@ -9,7 +9,5 @@
 
         public string Email { get; set; }
 
-        // TODO: Implement Image realization
-        // public string Image { get; set }
     }
 }
