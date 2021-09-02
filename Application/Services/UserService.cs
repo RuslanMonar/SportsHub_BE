@@ -74,5 +74,47 @@ namespace Application.Services
                 Image = user.Image
             };
         }
+        public async Task<Result> SwitchRolesAsync(string id)
+        {
+            string adminId = _userAccessorService.GetUserId();  
+
+            if (adminId == id)
+            {
+                return new Result
+                {
+                    Errors = new[] { "You cannot downgrade yourself to user" },
+                    Success = false
+                };
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return new Result
+                {
+                    Errors = new[] { "There is no such a user" },
+                    Success = false
+                };
+            }
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                await _userManager.RemoveFromRoleAsync(user, "Admin");
+                await _userManager.AddToRoleAsync(user, "User");
+                return new Result
+                {
+                    Success = true
+                };
+            }
+            else
+            {
+                await _userManager.RemoveFromRoleAsync(user, "User");
+                await _userManager.AddToRoleAsync(user, "Admin");
+                return new Result
+                {
+                    Success = true
+                };
+            }
+        }
     }
 }

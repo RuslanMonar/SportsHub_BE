@@ -12,15 +12,15 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    // postman tests [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly UserManager<AppUser> _userManager;
-        public UserController(IUserService userService, UserManager<AppUser> userManager)
+        
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _userManager = userManager;
+            
         }
 
         [HttpPost]
@@ -61,32 +61,36 @@ namespace API.Controllers
         }
 
         
-        [HttpPost]
-        [Route("GiveAdminPermission")]
-        public async Task<IActionResult> AddAdmin(UpdateToAdminResult updateToAdmin)
+        [HttpPut]
+        [Route("SwitchRoles")]
+        public async Task<IActionResult> SwitchRoles(UpdateToAdminResult updateToAdmin)
         {
-            var user = await _userManager.FindByEmailAsync(updateToAdmin.Email);
-            
-            if (user == null) return NotFound();
-            await _userManager.RemoveFromRoleAsync(user, "User");
-            await _userManager.AddToRoleAsync(user, "Admin");
+            try
+            {
+                var SwitchRoleUser = await _userService.SwitchRolesAsync(updateToAdmin.id);
+                if(SwitchRoleUser.Success)
+                {
+                    return Ok(new Result
+                    {
+                        Success = SwitchRoleUser.Success
+                    });
+                }
+                else
+                {
+                    return BadRequest(new Result
+                    {
+                        Errors = SwitchRoleUser.Errors
+                    });
+                }
 
-            return Ok(user);
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc);
+            }
         }
 
 
-        [HttpPost]
-        [Route("RemoveAdminPermission")]
-        public async Task<IActionResult> RemoveAdmin(UpdateToAdminResult removeAdmin)
-        {
-            var user = await _userManager.FindByEmailAsync(removeAdmin.Email);
-
-            if (user == null) return NotFound();
-            await _userManager.RemoveFromRoleAsync(user, "Admin");
-            await _userManager.AddToRoleAsync(user, "User");
-
-            return Ok(user);
-        }
-
+        
     }
 }

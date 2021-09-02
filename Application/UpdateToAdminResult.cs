@@ -4,8 +4,7 @@ namespace Application
 {
     public class UpdateToAdminResult
     {
-        [EmailAddress]
-        [Required]
-        public string Email { get; set; }
+        
+        public string id { get; set; }
     }
 }
