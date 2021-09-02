@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Data;
 using Domain;
@@ -16,7 +17,7 @@ namespace API.Extensions
             services.AddIdentityCore<AppUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<DataContext>()
-                .AddSignInManager<SignInManager<AppUser>>();
+                .AddSignInManager<SignInManager<AppUser>>().AddDefaultTokenProviders();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(opt =>
                 {
@@ -30,6 +31,10 @@ namespace API.Extensions
 
                     };
                 });
+
+            //services.AddDefaultTokenProviders();
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+                opt.TokenLifespan = TimeSpan.FromHours(2));
             return services;
         }
     }
