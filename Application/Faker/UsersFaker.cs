@@ -20,8 +20,8 @@ namespace Application.Faker
                     .RuleFor(u => u.FirstName, f => f.Name.FirstName())
                     .RuleFor(o => o.LastName, f => f.Name.LastName())
                     .RuleFor(o => o.Email, (f, u) => f.Internet.Email(u.FirstName, u.LastName))
-                    .RuleFor(o => o.UserName, (f, u) => f.Internet.Email(u.FirstName, u.LastName))
-                    .RuleFor(u => u.Image, f => f.Internet.Avatar());
+                    .RuleFor(o => o.UserName, (f, u) => f.Internet.Email(u.FirstName, u.LastName));
+                    //.RuleFor(u => u.Image, f => f.Internet.Avatar());
 
                 var users = userFaker.Generate(100).ToList();
 

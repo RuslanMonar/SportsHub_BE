@@ -97,7 +97,7 @@ namespace API.Controllers
             {
                 return BadRequest(new Result
                 {
-                    Errors = ModelState.Values.SelectMany(x => x.Errors.Select(a => a.ErrorMessage))
+                    Errors = ModelState.Values.SelectMany(x => x.Errors.Select(a => a.ErrorMessage)).ToList()
                 });
             }
 
@@ -161,6 +161,41 @@ namespace API.Controllers
                 Errors = authResponse.Errors
             });
 
+        }
+
+
+        [HttpPost]
+        [Route("forgot")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+        {
+            var result = await _authService.SendResetTokenAsync(forgotPasswordDto.Email);
+            if (!result.Success)
+            {
+                return BadRequest(new Result
+                {
+                    Errors = result.Errors
+                });
+            }
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("reset")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto resetPasswordDto)
+        {
+            var result = await _authService.ResetPasswordAsync(resetPasswordDto.Email, resetPasswordDto.Token, resetPasswordDto.NewPassword);
+            if (!result.Success)
+            {
+                return BadRequest(new Result
+                {
+                    Errors = result.Errors
+                });
+            }
+
+            return Ok();
         }
     }
 }

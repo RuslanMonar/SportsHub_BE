@@ -1,10 +1,15 @@
 using System.Configuration;
+
 using API.Extensions;
 using Application.FacebookResult;
 using Application.Services;
+using Application.Services.Admin;
+using Application.Services.Admin.Interfaces;
+using Application.Services.EmailService;
 using Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +43,7 @@ namespace API
             services.AddIdentityServices(_config);
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUsersService , UsersService>();
 
             // facebook auth install
             var facebookAuthSettings = new FacebookAuthSettings();
@@ -47,11 +53,26 @@ namespace API
             services.AddSingleton<IFacebookAuthService, FacebookAuthService>();
             services.AddScoped<IUserAccessorService, UserAccessorService>();
 
-            services.AddDefaultIdentity<AppUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<DataContext>();
+
+            
 
 
+            // email service config
+
+            var emailConfig = _config
+                .GetSection("EmailConfig")
+                .Get<EmailConfig>();
+            services.AddSingleton(emailConfig);
+
+            services.AddScoped<IEmailSender, EmailSender>();
+
+
+            services.Configure<FormOptions>(o =>
+            {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+            });
 
             services.AddSwaggerGen(c =>
             {
