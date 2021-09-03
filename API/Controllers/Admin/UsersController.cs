@@ -41,12 +41,13 @@ namespace API.Controllers
                     return BadRequest(e);
                 }
             }
+
             return BadRequest(new Result
             {
                 Errors = new[] {"Search name is empty"}
             });
         }
-        
+
         [HttpPut]
         [Route("ChangeStatus")]
         public async Task<IActionResult> ChangeStatus(ChangeStatusDto data)
@@ -66,6 +67,29 @@ namespace API.Controllers
                     Errors = status.Errors
                 });
             }
+        }
+
+        [HttpPost]
+        [Route("GetSortedUsers")]
+        public async Task<ActionResult<SearchUserDto>> GetSortedUsers(SortTypesDto data)
+        {
+            if (Enum.IsDefined(typeof(SortTypesDto), data))
+            {
+                var type = ((SortTypesDto)data).ToString();
+                try
+                {
+                    var sortResult = await _usersService.SortUsersAsync(type);
+                    return Ok(sortResult);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            return BadRequest(new Result
+            {
+                Errors = new[]{"Can't sort users by this parameter"}
+            });
         }
     }
 }
