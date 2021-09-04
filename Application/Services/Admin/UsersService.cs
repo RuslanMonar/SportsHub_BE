@@ -14,7 +14,7 @@ namespace Application.Services.Admin
 {
     public class UsersService : IUsersService
     {
-        private readonly UserManager<AppUser> _userManager;
+        public  UserManager<AppUser> _userManager;
         private readonly IUserAccessorService _userAccessorService;
 
         public UsersService(UserManager<AppUser> userManager, IUserAccessorService userAccessorService)
@@ -81,13 +81,37 @@ namespace Application.Services.Admin
                         .Select(user => new SearchUsersDto(ref user)).ToListAsync();
                     break;
             }
-
+            
             return new SearchResult
             {
                 Success = true,
                 Users =  users,
             };
         }
+        
+        public async  Task<SearchResult> GetAllUsers()
+        {
+            var users = new List<SearchUsersDto>();
+            var allUsersWithoutRoles = await _userManager.Users.ToListAsync();
+            foreach (var user in allUsersWithoutRoles)
+            {              
+                users.Add(new SearchUsersDto {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Image = user.Image,
+                    IsBlocked = user.IsBlocked,
+                    Role = await _userManager.GetRolesAsync(user)
+                });
+            }
+               
+            return new SearchResult
+            {
+                Success = true,
+                Users =  users,
+            }; 
+        }
+
 
         public async Task<Result> ChangeStatus(string id)
         {

@@ -91,5 +91,20 @@ namespace API.Controllers
                 Errors = new[]{"Can't sort users by this parameter"}
             });
         }
+
+        [HttpGet]
+        [Route("GetAllUsers")]
+        public async Task<ActionResult<SearchUserDto>> GetAllUsers()
+        {
+            try
+            {
+                var result = await _usersService.GetAllUsers();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
     }
 }
