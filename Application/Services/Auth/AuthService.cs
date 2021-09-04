@@ -293,7 +293,8 @@ namespace Application.Services
 
             try
             {
-                var message = new Message(new string[] { email }, "SportsHub, Reset Password", "https://localhost:3000/recovery?token="+resetToken, null);
+                var message = new Message(new string[] { email }, "SportsHub, Reset Password",
+                    "https://localhost:3000/recoveryPassword?email="+email+"?token="+resetToken, null);
                 await _emailSender.SendEmailAsync(message);
             }
             catch (Exception ex)
