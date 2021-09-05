@@ -14,7 +14,7 @@ namespace Application.Services.Admin
 {
     public class UsersService : IUsersService
     {
-        public  UserManager<AppUser> _userManager;
+        public UserManager<AppUser> _userManager;
         private readonly IUserAccessorService _userAccessorService;
 
         public UsersService(UserManager<AppUser> userManager, IUserAccessorService userAccessorService)
@@ -67,7 +67,7 @@ namespace Application.Services.Admin
             switch (type)
             {
                 case "Active":
-                    users =  await  _userManager.Users
+                    users = await _userManager.Users
                         .OrderByDescending(u => u.IsBlocked == false)
                         .Select(user => new SearchUsersDto(ref user)).ToListAsync();
                     break;
@@ -81,35 +81,38 @@ namespace Application.Services.Admin
                         .Select(user => new SearchUsersDto(ref user)).ToListAsync();
                     break;
             }
-            
+
             return new SearchResult
             {
                 Success = true,
-                Users =  users,
+                Users = users,
             };
         }
-        
-        public async  Task<SearchResult> GetAllUsers()
+        private async static Task<SearchUsersDto> GetUser(AppUser user, UserManager<AppUser> _userManager)
         {
-            var users = new List<SearchUsersDto>();
-            var allUsersWithoutRoles = await _userManager.Users.ToListAsync();
-            foreach (var user in allUsersWithoutRoles)
-            {              
-                users.Add(new SearchUsersDto {
+            return new SearchUsersDto {
                     Id = user.Id,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Image = user.Image,
                     IsBlocked = user.IsBlocked,
-                    Role = await _userManager.GetRolesAsync(user)
-                });
+                    Role = await _userManager.GetRolesAsync(user) 
+            };
+        }
+        public async Task<SearchResult> GetAllUsers()
+        {
+            var users = new List<SearchUsersDto>();
+            var allUsersWithoutRoles = await  _userManager.Users.ToListAsync();
+            foreach (var user in allUsersWithoutRoles)
+            {              
+                users.Add(await GetUser(user,_userManager));
             }
-               
+
             return new SearchResult
             {
                 Success = true,
-                Users =  users,
-            }; 
+                Users = users,
+            };
         }
 
 
@@ -121,7 +124,7 @@ namespace Application.Services.Admin
             {
                 return new Result
                 {
-                    Errors = new[] {"You cannot block yourself"},
+                    Errors = new[] { "You cannot block yourself" },
                     Success = false
                 };
             }
@@ -152,7 +155,7 @@ namespace Application.Services.Admin
                 {
                     return new Result
                     {
-                        Errors = new[] {"User was not blocked"},
+                        Errors = new[] { "User was not blocked" },
                     };
                 }
             }
@@ -160,7 +163,7 @@ namespace Application.Services.Admin
             {
                 return new Result
                 {
-                    Errors = new[] {"There is no such a user"},
+                    Errors = new[] { "There is no such a user" },
                 };
             }
         }
