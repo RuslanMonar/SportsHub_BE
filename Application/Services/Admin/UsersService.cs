@@ -14,10 +14,12 @@ namespace Application.Services.Admin
     public class UsersService : IUsersService
     {
         private readonly UserManager<AppUser> _userManager;
+        private readonly IUserAccessorService _userAccessorService;
 
-        public UsersService(UserManager<AppUser> userManager)
+        public UsersService(UserManager<AppUser> userManager, IUserAccessorService userAccessorService)
         {
             _userManager = userManager;
+            _userAccessorService = userAccessorService;
         }
 
         public async Task<SearchResult> SearchUserAsync(string name)
@@ -71,6 +73,58 @@ namespace Application.Services.Admin
                 Success = true,
                 Users = users,
             };
+        }
+
+        public async Task<Result> ChangeStatus(string id)
+        {
+            string adminId = _userAccessorService.GetUserId();
+
+            if (adminId == id)
+            {
+                return new Result
+                {
+                    Errors = new[] {"You cannot block yourself"},
+                    Success = false
+                };
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                if (user.IsBlocked)
+                {
+                    user.IsBlocked = false;
+                }
+                else
+                {
+                    user.IsBlocked = true;
+                }
+
+                var result = await _userManager.UpdateAsync(user);
+                
+                if (result.Succeeded)
+                {
+                    return new Result
+                    {
+                        Success = true
+                    };
+                }
+                else
+                {
+                    return new Result
+                    {
+                        Errors = new[] {"User was not blocked"},
+                    };
+                }
+            }
+            else
+            {
+                return new Result
+                {
+                    Errors = new[] {"There is no such a user"},
+                };
+            }
         }
     }
 }
