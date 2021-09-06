@@ -17,7 +17,9 @@ namespace API.Controllers
     [Route("api/[controller]")]
 
 
+
     /*[Authorize(Roles = "Admin")]*/
+
 
     public class UsersController : ControllerBase
     {
@@ -25,7 +27,9 @@ namespace API.Controllers
 
         public UsersController(IUsersService usersService)
         {
+
             _usersService = usersService;
+
         }
 
         [HttpGet]
@@ -57,7 +61,7 @@ namespace API.Controllers
         {
             try
             {
-                var SwitchRoleUser = await _userService.SwitchRolesAsync(updateToAdmin.id);
+                var SwitchRoleUser = await _usersService.SwitchRolesAsync(updateToAdmin.id);
                 if (SwitchRoleUser.Success)
                 {
                     return Ok(new Result
