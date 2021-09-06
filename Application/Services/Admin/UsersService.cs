@@ -74,8 +74,8 @@ namespace Application.Services.Admin
                 Users = users,
             };
         }
-
-        public async Task<Result> SwitchRolesAsync(string id)
+        
+        public async Task<Result> ChangeStatus(string id)
         {
             string adminId = _userAccessorService.GetUserId();
 
@@ -83,12 +83,68 @@ namespace Application.Services.Admin
             {
                 return new Result
                 {
-                    Errors = new[] { "You cannot downgrade yourself to user" },
+                    Errors = new[] {"You cannot block yourself"},
                     Success = false
                 };
             }
 
             var user = await _userManager.FindByIdAsync(id);
+
+            if (user != null)
+            {
+                if (user.IsBlocked)
+                {
+                    user.IsBlocked = false;
+                }
+                else
+                {
+                    user.IsBlocked = true;
+                }
+
+                var result = await _userManager.UpdateAsync(user);
+                
+                if (result.Succeeded)
+                {
+                    return new Result
+                    {
+                        Success = true
+                    };
+                }
+                else
+                {
+                    return new Result
+                    {
+                        Errors = new[] {"User was not blocked"},
+                    };
+                }
+            }
+            else
+            {
+                return new Result
+                {
+                    Errors = new[] {"There is no such a user"},
+                };
+            }
+        }
+
+        public async Task<Result> SwitchRolesAsync(string id)
+
+        {
+            string adminId = _userAccessorService.GetUserId();
+
+            if (adminId == id)
+            {
+                return new Result
+                {
+
+                    Errors = new[] { "You cannot downgrade yourself to user" },
+
+                    Success = false
+                };
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+
 
             if (user == null)
             {
