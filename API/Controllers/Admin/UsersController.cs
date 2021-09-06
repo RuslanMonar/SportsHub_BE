@@ -15,7 +15,10 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+
+
     /*[Authorize(Roles = "Admin")]*/
+
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
@@ -46,6 +49,37 @@ namespace API.Controllers
                 Errors = new[] {"Search name is empty"}
             });
         }
+
+
+        [HttpPut]
+        [Route("SwitchRoles")]
+        public async Task<IActionResult> SwitchRoles(UpdateToAdminResult updateToAdmin)
+        {
+            try
+            {
+                var SwitchRoleUser = await _userService.SwitchRolesAsync(updateToAdmin.id);
+                if (SwitchRoleUser.Success)
+                {
+                    return Ok(new Result
+                    {
+                        Success = SwitchRoleUser.Success
+                    });
+                }
+                else
+                {
+                    return BadRequest(new Result
+                    {
+                        Errors = SwitchRoleUser.Errors
+                    });
+                }
+
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc);
+            }
+         }
+
         
         [HttpPut]
         [Route("ChangeStatus")]
@@ -65,6 +99,7 @@ namespace API.Controllers
                 {
                     Errors = status.Errors
                 });
+
             }
         }
     }

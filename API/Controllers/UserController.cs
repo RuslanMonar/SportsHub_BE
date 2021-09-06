@@ -4,18 +4,23 @@ using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System;
+using Application;
+using Microsoft.AspNetCore.Identity;
+using Domain;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        
         public UserController(IUserService userService)
         {
             _userService = userService;
+            
         }
 
         [HttpPost]
@@ -55,5 +60,10 @@ namespace API.Controllers
             }
         }
 
+        
+       
+
+
+        
     }
 }
