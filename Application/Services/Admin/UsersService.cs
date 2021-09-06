@@ -32,7 +32,7 @@ namespace Application.Services.Admin
                 //Якшо name містить firstName lastName 
                 if (name.Any(x => Char.IsWhiteSpace(x)))
                 {
-                    
+
                     var names = Regex.Split(name, @"\s+"); //Видаляю всі пробіли між firstName і lastName
                     string firstName = names[0];
                     string lastName = names[1];
@@ -74,7 +74,7 @@ namespace Application.Services.Admin
                 Users = users,
             };
         }
-        
+
         public async Task<Result> ChangeStatus(string id)
         {
             string adminId = _userAccessorService.GetUserId();
@@ -83,7 +83,7 @@ namespace Application.Services.Admin
             {
                 return new Result
                 {
-                    Errors = new[] {"You cannot block yourself"},
+                    Errors = new[] { "You cannot block yourself" },
                     Success = false
                 };
             }
@@ -102,7 +102,7 @@ namespace Application.Services.Admin
                 }
 
                 var result = await _userManager.UpdateAsync(user);
-                
+
                 if (result.Succeeded)
                 {
                     return new Result
@@ -114,7 +114,7 @@ namespace Application.Services.Admin
                 {
                     return new Result
                     {
-                        Errors = new[] {"User was not blocked"},
+                        Errors = new[] { "User was not blocked" },
                     };
                 }
             }
@@ -122,7 +122,7 @@ namespace Application.Services.Admin
             {
                 return new Result
                 {
-                    Errors = new[] {"There is no such a user"},
+                    Errors = new[] { "There is no such a user" },
                 };
             }
         }
@@ -170,6 +170,37 @@ namespace Application.Services.Admin
                 return new Result
                 {
                     Success = true
+                };
+            }
+        }
+
+        public async Task<Result> DeleteUserAsync(string id)
+        {
+            string adminId = _userAccessorService.GetUserId();
+
+            if (adminId == id)
+            {
+                return new Result
+                {
+                    Errors = new[] { "You cannot delete yourself" },
+                    Success = false
+                };
+            }
+            var user = await _userManager.FindByIdAsync(id);
+            if (user != null)
+            {
+                var result = await _userManager.DeleteAsync(user);
+                return new Result
+                {
+                    Success = true
+                };
+            }
+            else
+            {
+                return new Result
+                {
+                    Errors = new[] { "There is no such a user" },
+                    Success = false
                 };
             }
         }
