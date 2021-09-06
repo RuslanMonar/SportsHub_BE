@@ -57,7 +57,7 @@ namespace API.Controllers
         {
             try
             {
-                var SwitchRoleUser = await _userService.SwitchRolesAsync(updateToAdmin.id);
+                var SwitchRoleUser = await _usersService.SwitchRolesAsync(updateToAdmin.id);
                 if (SwitchRoleUser.Success)
                 {
                     return Ok(new Result
