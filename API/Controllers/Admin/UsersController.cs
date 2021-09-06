@@ -17,11 +17,11 @@ namespace API.Controllers
     //[Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
-        private readonly IUsersService _userService;
+        private readonly IUsersService _usersService;
 
         public UsersController(IUsersService userService)
         {
-            _userService = userService;
+            _usersService = userService;
         }
 
         [HttpGet]
@@ -32,7 +32,7 @@ namespace API.Controllers
             {
                 try
                 {
-                    var users = await _userService.SearchUserAsync(name);
+                    var users = await _usersService.SearchUserAsync(name);
                     return Ok(users);
                 }
                 catch (Exception e)
@@ -52,7 +52,7 @@ namespace API.Controllers
         {
             try
             {
-                var SwitchRoleUser = await _userService.SwitchRolesAsync(updateToAdmin.id);
+                var SwitchRoleUser = await _usersService.SwitchRolesAsync(updateToAdmin.id);
                 if (SwitchRoleUser.Success)
                 {
                     return Ok(new Result
