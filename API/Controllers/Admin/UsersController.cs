@@ -8,20 +8,24 @@ using Application;
 using Application.Services.Admin.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    //[Authorize(Roles = "Admin")]
+
+
+    /*[Authorize(Roles = "Admin")]*/
+
     public class UsersController : ControllerBase
     {
-        private readonly IUsersService _userService;
+        private readonly IUsersService _usersService;
 
-        public UsersController(IUsersService userService)
+        public UsersController(IUsersService usersService)
         {
-            _userService = userService;
+            _usersService = usersService;
         }
 
         [HttpGet]
@@ -32,7 +36,7 @@ namespace API.Controllers
             {
                 try
                 {
-                    var users = await _userService.SearchUserAsync(name);
+                    var users = await _usersService.SearchUserAsync(name);
                     return Ok(users);
                 }
                 catch (Exception e)
@@ -45,6 +49,7 @@ namespace API.Controllers
                 Errors = new[] {"Search name is empty"}
             });
         }
+
 
         [HttpPut]
         [Route("SwitchRoles")]
@@ -72,6 +77,29 @@ namespace API.Controllers
             catch (Exception exc)
             {
                 return BadRequest(exc);
+            }
+         }
+
+        
+        [HttpPut]
+        [Route("ChangeStatus")]
+        public async Task<IActionResult> ChangeStatus(ChangeStatusDto data)
+        {
+            var status = await _usersService.ChangeStatus(data.Id);
+            if (status.Success)
+            {
+                return Ok(new Result
+                {
+                    Success = status.Success
+                });
+            }
+            else
+            {
+                return BadRequest(new Result
+                {
+                    Errors = status.Errors
+                });
+
             }
         }
     }

@@ -8,6 +8,10 @@ namespace Application.Services.Admin.Interfaces
     public interface IUsersService
     {
         Task<SearchResult>  SearchUserAsync(string Username);
+
         Task<Result> SwitchRolesAsync(string id);
+
+        Task<Result> ChangeStatus(string id);
+
     }
 }
