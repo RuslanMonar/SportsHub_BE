@@ -112,7 +112,7 @@ namespace API.Controllers
         {
             if (Enum.IsDefined(typeof(SortTypesDto), data))
             {
-                var type = ((SortTypesDto)data).ToString();
+                var type = ((SortTypesDto) data).ToString();
                 try
                 {
                     var sortResult = await _usersService.SortUsersAsync(type);
@@ -123,16 +123,18 @@ namespace API.Controllers
                     return BadRequest(e);
                 }
             }
+
             return BadRequest(new Result
             {
-                Errors = new[]{"Can't sort users by this parameter"}
+                Errors = new[] {"Can't sort users by this parameter"}
             });
+        }
 
         [HttpDelete]
         [Route("DeleteUser")]
         public async Task<ActionResult<Result>> DeleteUser(DeleteUserDto id)
         {
-            var deleteUser = await _userService.DeleteUserAsync(id.Id);
+            var deleteUser = await _usersService.DeleteUserAsync(id.Id);
             if (deleteUser.Success)
             {
                 return Ok(new Result
