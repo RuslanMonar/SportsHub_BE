@@ -44,11 +44,13 @@ namespace API.Controllers
                     return BadRequest(e);
                 }
             }
+
             return BadRequest(new Result
             {
                 Errors = new[] { "Search name is empty" }
             });
         }
+
 
 
         [HttpPut]
@@ -103,6 +105,29 @@ namespace API.Controllers
             }
         }
 
+
+        [HttpPost]
+        [Route("GetSortedUsers")]
+        public async Task<ActionResult<SearchUserDto>> GetSortedUsers(SortTypesDto data)
+        {
+            if (Enum.IsDefined(typeof(SortTypesDto), data))
+            {
+                var type = ((SortTypesDto)data).ToString();
+                try
+                {
+                    var sortResult = await _usersService.SortUsersAsync(type);
+                    return Ok(sortResult);
+                }
+                catch (Exception e)
+                {
+                    return BadRequest(e);
+                }
+            }
+            return BadRequest(new Result
+            {
+                Errors = new[]{"Can't sort users by this parameter"}
+            });
+
         [HttpDelete]
         [Route("DeleteUser")]
         public async Task<ActionResult<Result>> DeleteUser(DeleteUserDto id)
@@ -122,7 +147,6 @@ namespace API.Controllers
                     Errors = deleteUser.Errors
                 });
             }
-
         }
     }
 }

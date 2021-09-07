@@ -9,6 +9,7 @@ namespace Application.Services.Admin.Interfaces
     {
         Task<SearchResult>  SearchUserAsync(string Username);
 
+
         Task<Result> SwitchRolesAsync(string id);
 
         Task<Result> ChangeStatus(string id);
