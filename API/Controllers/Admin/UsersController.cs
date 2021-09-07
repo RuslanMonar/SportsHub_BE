@@ -15,14 +15,17 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    /*[Authorize(Roles = "Admin")]*/
+    [Authorize(Roles = "Admin")]
+
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
 
         public UsersController(IUsersService usersService)
         {
+
             _usersService = usersService;
+
         }
 
         [HttpGet]
@@ -44,9 +47,41 @@ namespace API.Controllers
 
             return BadRequest(new Result
             {
-                Errors = new[] {"Search name is empty"}
+                Errors = new[] { "Search name is empty" }
             });
         }
+
+
+
+        [HttpPut]
+        [Route("SwitchRoles")]
+        public async Task<IActionResult> SwitchRoles(UpdateToAdminResult updateToAdmin)
+        {
+            try
+            {
+                var SwitchRoleUser = await _usersService.SwitchRolesAsync(updateToAdmin.id);
+                if (SwitchRoleUser.Success)
+                {
+                    return Ok(new Result
+                    {
+                        Success = SwitchRoleUser.Success
+                    });
+                }
+                else
+                {
+                    return BadRequest(new Result
+                    {
+                        Errors = SwitchRoleUser.Errors
+                    });
+                }
+
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc);
+            }
+        }
+
 
         [HttpPut]
         [Route("ChangeStatus")]
@@ -66,8 +101,10 @@ namespace API.Controllers
                 {
                     Errors = status.Errors
                 });
+
             }
         }
+
 
         [HttpPost]
         [Route("GetSortedUsers")]
@@ -75,7 +112,7 @@ namespace API.Controllers
         {
             if (Enum.IsDefined(typeof(SortTypesDto), data))
             {
-                var type = ((SortTypesDto)data).ToString();
+                var type = ((SortTypesDto) data).ToString();
                 try
                 {
                     var sortResult = await _usersService.SortUsersAsync(type);
@@ -86,9 +123,10 @@ namespace API.Controllers
                     return BadRequest(e);
                 }
             }
+
             return BadRequest(new Result
             {
-                Errors = new[]{"Can't sort users by this parameter"}
+                Errors = new[] {"Can't sort users by this parameter"}
             });
         }
 
@@ -104,6 +142,27 @@ namespace API.Controllers
             catch (Exception e)
             {
                 return BadRequest(e.Message);
+            }
+         }
+
+        [HttpDelete]
+        [Route("DeleteUser")]
+        public async Task<ActionResult<Result>> DeleteUser(DeleteUserDto id)
+        {
+            var deleteUser = await _usersService.DeleteUserAsync(id.Id);
+            if (deleteUser.Success)
+            {
+                return Ok(new Result
+                {
+                    Success = deleteUser.Success
+                });
+            }
+            else
+            {
+                return BadRequest(new Result
+                {
+                    Errors = deleteUser.Errors
+                });
             }
         }
     }
