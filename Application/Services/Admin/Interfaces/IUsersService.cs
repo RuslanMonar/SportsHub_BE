@@ -11,9 +11,9 @@ namespace Application.Services.Admin.Interfaces
 
         Task<SearchResult> SortUsersAsync(string type);
         Task<Result> SwitchRolesAsync(string id);
-
         Task<Result> ChangeStatus(string id);
-
+        Task<SearchResult> GetAllUsers();
         Task<Result> DeleteUserAsync(string id);
+
     }
 }

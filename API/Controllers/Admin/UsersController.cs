@@ -130,6 +130,21 @@ namespace API.Controllers
             });
         }
 
+        [HttpGet]
+        [Route("GetAllUsers")]
+        public async Task<ActionResult<SearchUserDto>> GetAllUsers()
+        {
+            try
+            {
+                var result = await _usersService.GetAllUsers();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+         }
+
         [HttpDelete]
         [Route("DeleteUser")]
         public async Task<ActionResult<Result>> DeleteUser(DeleteUserDto id)
