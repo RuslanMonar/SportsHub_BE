@@ -15,7 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Identity;
 using ConfigurationSection = System.Configuration.ConfigurationSection;
+using Domain;
 
 namespace API
 {
@@ -51,6 +53,10 @@ namespace API
             services.AddSingleton<IFacebookAuthService, FacebookAuthService>();
             services.AddScoped<IUserAccessorService, UserAccessorService>();
 
+
+           
+
+
             // email service config
 
             var emailConfig = _config
@@ -59,6 +65,7 @@ namespace API
             services.AddSingleton(emailConfig);
 
             services.AddScoped<IEmailSender, EmailSender>();
+
 
             services.Configure<FormOptions>(o =>
             {
