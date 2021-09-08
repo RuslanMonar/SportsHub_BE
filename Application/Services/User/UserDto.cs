@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace API.DTOs
+namespace Application.Services.User
 {
     public class UserDto
     {
@@ -11,5 +11,7 @@ namespace API.DTOs
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        public bool IsAdmin { get; set; }
     }
 }

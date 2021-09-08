@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Services.User;
+using Domain;
 using System.Threading.Tasks;
 
 namespace Application.Services
@@ -7,7 +8,7 @@ namespace Application.Services
     {
         Task<Result> UpdateUserAsync(string firstName, string lastName, string email);
 
-        Task<AppUser> GetUserAsync();
+        Task<UserDto> GetUserAsync();
         
     }
 }
