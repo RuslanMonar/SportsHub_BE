@@ -10,9 +10,9 @@ namespace Domain
 
         public string Location { get; set; }
 
-        public string Category { get; set; }
+        public virtual Category Category { get; set; }
 
-        public string SubCategory { get; set; }
+        public virtual SubCategory SubCategory { get; set; }
 
         public string ImageUrl { get; set; }
 

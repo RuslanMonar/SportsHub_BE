@@ -32,8 +32,6 @@ namespace Application.Services.Admin
             {
                 Name = name,
                 Location = location,
-                Category = category,
-                SubCategory = subcategory,
                 ImageUrl = imagePath
             };
 
