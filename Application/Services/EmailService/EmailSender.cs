@@ -6,8 +6,8 @@ using MimeKit;
 
 namespace Application.Services.EmailService
 {
-  public class EmailSender : IEmailSender
-    { 
+    public class EmailSender : IEmailSender
+    {
         private readonly EmailConfig _emailConfig;
         public EmailSender(EmailConfig emailConfig)
         {
@@ -52,10 +52,19 @@ namespace Application.Services.EmailService
         private MimeMessage CreateEmailMessage(Message message)
         {
             var emailMessage = new MimeMessage();
-            emailMessage.From.Add(new MailboxAddress(_emailConfig.From));
-            emailMessage.To.AddRange(message.To);
+           
+            if (message.To == null)
+            {
+                emailMessage.To.Add(new MailboxAddress(_emailConfig.To));
+                emailMessage.From.AddRange(message.From);
+            }
+            else
+            {
+                emailMessage.To.AddRange(message.To);
+                emailMessage.From.Add(new MailboxAddress(_emailConfig.From));
+            }
+           
             emailMessage.Subject = message.Subject;
-
             var bodyBuilder = new BodyBuilder { HtmlBody = string.Format("<p>{0}</p>", message.Content) };
 
             if (message.Attachments != null && message.Attachments.Any())
