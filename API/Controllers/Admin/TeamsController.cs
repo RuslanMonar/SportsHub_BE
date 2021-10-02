@@ -51,6 +51,11 @@ namespace API.Controllers.Admin
                 path
                 );
 
+            if (result.Success == false)
+            {
+                return BadRequest(result.Errors);
+            }
+
             return Ok(result);
         }
 

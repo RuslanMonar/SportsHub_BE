@@ -32,9 +32,19 @@ namespace Application.Services.Admin
                 AddedAt = DateTime.Now
             };
 
-
-            await _dataContext.Teams.AddAsync(team);
-            await _dataContext.SaveChangesAsync();
+            try
+            {
+                await _dataContext.Teams.AddAsync(team);
+                await _dataContext.SaveChangesAsync();
+            }
+            catch(Exception exc)
+            {
+                return new Result
+                {
+                    Success = false,
+                    Errors = new[] { exc.Message }
+                };
+            }
             
 
             return new Result
