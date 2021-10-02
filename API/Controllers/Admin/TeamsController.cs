@@ -4,11 +4,7 @@ using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Application.Services.Admin.Interfaces;
-using System;
 using Application;
-using Microsoft.AspNetCore.Identity;
-using Domain;
-using Microsoft.AspNetCore.Http;
 using System.IO;
 
 namespace API.Controllers.Admin
@@ -50,8 +46,8 @@ namespace API.Controllers.Admin
             var result = await _teamsService.AddTeam(
                 team.Name,
                 team.Location,
-                team.Category,
-                team.SubCategory,
+                team.CategoryId,
+                team.SubCategoryId,
                 path
                 );
 

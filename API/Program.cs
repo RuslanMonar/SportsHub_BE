@@ -35,6 +35,7 @@ namespace API
             await context.Database.MigrateAsync();
             await Seed.SeedData(context, userManager, roleManager);
             await UsersFaker.GenerateUsers(userManager);
+            await TeamsFaker.GenerateTeams(context);
             
 
             await host.RunAsync();

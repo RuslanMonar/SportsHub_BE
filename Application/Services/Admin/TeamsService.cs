@@ -5,13 +5,6 @@ using Application.Admin.Users;
 using Application.Services.Admin.Interfaces;
 using Domain;
 using Data;
-using Microsoft.AspNetCore.Identity;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
-using System.IO;
 
 namespace Application.Services.Admin
 {
@@ -24,15 +17,19 @@ namespace Application.Services.Admin
             _dataContext = dataContext;
         }
 
-        public async Task<Result> AddTeam(string name, string location, string category, string subcategory, string imagePath)
+        public async Task<Result> AddTeam(string name, string location, int categoryID, int subCategoryID, string imagePath)
         {
-
+            Category category = await _dataContext.Categories.FindAsync(categoryID);
+            SubCategory subCategory = await _dataContext.SubCategories.FindAsync(subCategoryID);
 
             Team team = new Team
             {
                 Name = name,
                 Location = location,
-                ImageUrl = imagePath
+                Category = category,
+                SubCategory = subCategory,
+                ImageUrl = imagePath,
+                AddedAt = DateTime.Now
             };
 
 
