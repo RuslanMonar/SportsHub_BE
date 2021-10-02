@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Application.Services.EmailService;
 using Microsoft.Extensions.Configuration;
 using System;
+using Application.Services.User;
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Services
@@ -98,22 +99,23 @@ namespace Application.Services
         }
 
 
-        public async Task<AppUser> GetUserAsync()
+        public async Task<UserDto> GetUserAsync()
         {
 
             var user = await _userManager.FindByIdAsync(_userAccessorService.GetUserId());
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
             if (user == null)
             {
                 throw new Exception("User does not exists");
             }
 
-            return new AppUser
+            return new UserDto
             {
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-              
+                IsAdmin = isAdmin
             };
         }
         

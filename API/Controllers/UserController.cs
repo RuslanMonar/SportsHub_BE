@@ -7,12 +7,12 @@ using System;
 using Application;
 using Microsoft.AspNetCore.Identity;
 using Domain;
+using Application.Services.User;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -68,7 +68,8 @@ namespace API.Controllers
                 {
                     FirstName = receivedUser.FirstName,
                     LastName = receivedUser.LastName,
-                    Email = receivedUser.Email
+                    Email = receivedUser.Email,
+                    IsAdmin = receivedUser.IsAdmin
                 }
                 );
             }
