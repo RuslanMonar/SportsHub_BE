@@ -1,17 +1,17 @@
 ﻿using System.Threading.Tasks;
-using API.DTOs.Admin.Teams;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Application.Services.Admin.Interfaces;
 using Application;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace API.Controllers.Admin
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public class TeamsController : ControllerBase
     {
         private readonly ITeamsService _teamsService;
@@ -24,10 +24,10 @@ namespace API.Controllers.Admin
 
         [HttpPost]
         [Route("add")]
-        public async Task<ActionResult<Result>> AddTeam(TeamDto team)
+        public async Task<ActionResult<Result>> AddTeam(IFormCollection data, IFormFile image)
         {
             
-            if (team == null)
+            if (data == null)
             {
                 return BadRequest(new Result
                 {
@@ -36,18 +36,18 @@ namespace API.Controllers.Admin
             }
 
             // save logo in folders
-            string path = "/resources/img/teams/" + $"{team.Name}-{team.Location}.png";
+            string path = "/resources/img/teams/" + $"{data["Name"]}-{data["Location"]}.png";
             using (var fileStream = new FileStream(Directory.GetCurrentDirectory() + path, FileMode.Create))
             {
-                await team.Image.CopyToAsync(fileStream);
+                await image.CopyToAsync(fileStream);
             }
 
 
             var result = await _teamsService.AddTeam(
-                team.Name,
-                team.Location,
-                team.CategoryId,
-                team.SubCategoryId,
+                data["Name"],
+                data["Location"],
+                int.Parse(data["CategoryId"]),
+                int.Parse(data["SubCategoryId"]),
                 path
                 );
 
