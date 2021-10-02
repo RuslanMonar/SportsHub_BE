@@ -39,7 +39,25 @@ namespace API.Controllers
             return Ok("Update was succeeded");
         }
 
+        [HttpPost]
+        [Route("contactUs")]
+        public async Task<IActionResult> ContactUs(ContactUsDto contactUsDto)
+        {
+            var result = await _userService.ContactUsAsync(contactUsDto.FirstName, contactUsDto.Email, contactUsDto.Phone, contactUsDto.Message);
+           
+            if (!result.Success)
+            {
+                return BadRequest(new Result
+                {
+                    Errors = result.Errors
+                });
+            }
+
+            return Ok();
+        }
+
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         [Route("get")]
         public async Task<IActionResult> GetUser()
         {
