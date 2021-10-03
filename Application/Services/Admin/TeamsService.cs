@@ -5,6 +5,7 @@ using Application.Admin.Users;
 using Application.Services.Admin.Interfaces;
 using Domain;
 using Data;
+using Application.Results.Admin.Teams;
 
 namespace Application.Services.Admin
 {
@@ -17,10 +18,63 @@ namespace Application.Services.Admin
             _dataContext = dataContext;
         }
 
+
+
+        public async Task<CategoriesResult> GetAllCategories()
+        {
+            var categories = _dataContext.Categories;
+            var subCategories = _dataContext.SubCategories;
+
+            CategoriesResult categoriesResult = new CategoriesResult();
+
+            await Task.Run(() => {
+                foreach (Category category in categories)
+                {
+                    categoriesResult.categories.Add(new CategoryDto
+                    {
+                        Id = category.Id,
+                        Name = category.Name
+                    });
+                };
+                foreach (SubCategory sub in subCategories)
+                {
+                    categoriesResult.subCategories.Add(new SubCategoryDto
+                    {
+                        Id = sub.Id,
+                        Name = sub.Name,
+                        CategoryId = sub.CategoryId
+                    });
+                }
+            });
+            
+
+            categoriesResult.Success = true;
+            return categoriesResult;
+        }
+
         public async Task<Result> AddTeam(string name, string location, int categoryID, int subCategoryID, string imagePath)
         {
             Category category = await _dataContext.Categories.FindAsync(categoryID);
+
+            if (category == null)
+            {
+                return new Result
+                {
+                    Success = false,
+                    Errors = new[] { "There is no such category" }
+                };
+            }
+
+
             SubCategory subCategory = await _dataContext.SubCategories.FindAsync(subCategoryID);
+            if (subCategory == null)
+            {
+                return new Result
+                {
+                    Success = false,
+                    Errors = new[] { "There is no such subcategory" }
+                };
+            }
 
             Team team = new Team
             {

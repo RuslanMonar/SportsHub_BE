@@ -6,6 +6,7 @@ using Application.Services.Admin.Interfaces;
 using Application;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Application.Results.Admin.Teams;
 
 namespace API.Controllers.Admin
 {
@@ -20,6 +21,19 @@ namespace API.Controllers.Admin
         {
             _teamsService = teamsService;
 
+        }
+
+        [HttpGet]
+        [Route("categories/get")]
+        public async Task<ActionResult<CategoriesResult>> GetAllCategories()
+        {
+            var result = await _teamsService.GetAllCategories();
+            if (result.Success == false)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
         [HttpPost]
