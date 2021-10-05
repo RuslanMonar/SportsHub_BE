@@ -10,7 +10,7 @@ namespace Application.Services
       
         Task<Result> ContactUsAsync(string firstName,string email,string phone, string message);
 
-        Task<AppUser> GetUserAsync();
+        Task<UserDto> GetUserAsync();
         
     }
 }
