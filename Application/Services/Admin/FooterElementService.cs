@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using Application.Results.Admin.Users;
+using static Application.Results.Admin.Users.FooterElementResultDto;
 
 namespace Application.Services.Admin
 {
@@ -24,30 +26,31 @@ namespace Application.Services.Admin
             _dataContext = dataContext;
         }
 
-        public async Task<Result> AddFooterElement(string name, string category, bool isVisible, bool isDeletable, string SourceLink)
+        private FooterElementResultDto AddFooterElement(FooterElement footerElement)
         {
-            FooterElement footerElement = new FooterElement
+            return new FooterElementResultDto
             {
-                Name = name,
-                Category = category,
-                IsVisible = isVisible,
-                IsDeletable = isDeletable,
-                SourceLink = SourceLink
-
-
-            };
-            await _dataContext.FooterElements.AddAsync(footerElement);
-            await _dataContext.SaveChangesAsync();
-
-            return new Result
-            {
-                Success = true
+                Id = footerElement.Id,
+                Name = footerElement.Name,
+                Category = footerElement.Category,
+                IsVisible = footerElement.IsVisible,
+                IsDeletable = footerElement.IsDeletable,
+                SourceLink = footerElement.SourceLink
             };
         }
 
-        public  IEnumerable<FooterElement> GetAllitems()
+
+
+        public FooterElementResult GetAllFooter()
         {
-            return _dataContext.FooterElements.ToList();
+            var footers = new List<FooterElementResultDto>();
+            return new FooterElementResult
+            {
+                Success = true,
+                Elements = footers
+
+
+            };
         }
     }
 }

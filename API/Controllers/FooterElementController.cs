@@ -8,6 +8,7 @@ using Application;
 using Microsoft.AspNetCore.Identity;
 using Domain;
 using Application.Services.Admin.Interfaces;
+using Application.Results.Admin.Users;
 
 namespace API.Controllers.Admin
 {
@@ -25,18 +26,27 @@ namespace API.Controllers.Admin
 
         [HttpGet]
         [Route("get")]
-        public IActionResult GetFooter()
+        public ActionResult<FooterElementResultDto> GetFooter()
         {
 
 
 
 
-            var users = _footerelements.GetAllitems();
-            return Ok(new FooterElementDto { Elements = users});
-                
-           
-
             
+
+            try
+            {
+                var result = _footerelements.GetAllFooter();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+
+
+
         }
     }
 }
