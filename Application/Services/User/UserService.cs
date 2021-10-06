@@ -25,22 +25,25 @@ namespace Application.Services
             _emailSender = emailSender;
         }
 
-        public async Task<Result> UpdateUserAsync(string firstName, string lastName, string email)
+        public async Task<Result> UpdateUserAsync(string name, string email, string image)
         {
             var user = await _userManager.FindByIdAsync(_userAccessorService.GetUserId());
-
+            string[] fullname = name.Split(' ');
+            string firstName = fullname[0];
+            string lastName = fullname[1];
             if (user == null)
             {
-                return new Result {
+                return new Result
+                {
                     Success = false,
-                    Errors = new [] { "User does not exists." }
+                    Errors = new[] { "User does not exists." }
                 };
             }
 
             user.FirstName = firstName;
             user.LastName = lastName;
             user.Email = email;
-
+            user.Image = image;
             var updateResult = await _userManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
@@ -58,6 +61,7 @@ namespace Application.Services
             };
 
         }
+
 
         public async Task<Result> ContactUsAsync(string firstName, string email, string phone, string usermessage)
         {
