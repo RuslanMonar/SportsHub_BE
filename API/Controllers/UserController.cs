@@ -25,19 +25,20 @@ namespace API.Controllers
 
         [HttpPost]
         [Route("update")]
-        public async Task<IActionResult> UpdateInfo(UserDto user)
+        public async Task<IActionResult> UpdateInfo(UpdateUserDto user)
         {
             var updateResult = await _userService.UpdateUserAsync(
-                user.FirstName, user.LastName, user.Email
+                user.Name, user.Email, user.Image
                 );
 
             if (!updateResult.Success)
             {
-               
+
                 return BadRequest(updateResult);
             }
             return Ok("Update was succeeded");
         }
+
 
         [HttpPost]
         [Route("contactUs")]
