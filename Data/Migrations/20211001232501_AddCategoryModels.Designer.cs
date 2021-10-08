@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211001232501_AddCategoryModels")]
+    partial class AddCategoryModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,11 +98,7 @@ namespace Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-
-            modelBuilder.Entity("Domain.FooterArticle", b =>
-
             modelBuilder.Entity("Domain.Category", b =>
-
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -109,9 +107,6 @@ namespace Data.Migrations
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-
-                    b.Property<string>("Text")
 
                     b.HasKey("Id");
 
@@ -129,16 +124,9 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-
-                    b.ToTable("FooterArticles");
-                });
-
-            modelBuilder.Entity("Domain.FooterElement", b =>
 
                     b.HasIndex("CategoryId");
 
@@ -146,22 +134,11 @@ namespace Data.Migrations
                 });
 
             modelBuilder.Entity("Domain.Team", b =>
-
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-
-                    b.Property<string>("Category")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeletable")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVisible")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime>("AddedAt")
                         .HasColumnType("datetime2");
@@ -175,17 +152,8 @@ namespace Data.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("nvarchar(max)");
 
-
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
-
-
-                    b.Property<string>("SourceLink")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("FooterElements");
 
                     b.Property<int?>("SubCategoryId")
                         .HasColumnType("int");
@@ -197,7 +165,6 @@ namespace Data.Migrations
                     b.HasIndex("SubCategoryId");
 
                     b.ToTable("Teams");
-
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
