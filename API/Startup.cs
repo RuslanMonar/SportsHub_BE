@@ -44,7 +44,12 @@ namespace API
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUsersService , UsersService>();
+
+            services.AddScoped<IFooterArticleService, FooterArticleService>();
+            services.AddScoped<IFooterElementsService, FooterElementService>();
+
             services.AddScoped<ITeamsService, TeamsService>();
+
 
             // facebook auth install
             var facebookAuthSettings = new FacebookAuthSettings();
