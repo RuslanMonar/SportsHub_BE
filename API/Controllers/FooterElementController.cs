@@ -29,11 +29,6 @@ namespace API.Controllers.Admin
         public ActionResult<FooterElementResultDto> GetFooter()
         {
 
-
-
-
-            
-
             try
             {
                 var result = _footerelements.GetAllFooter();
