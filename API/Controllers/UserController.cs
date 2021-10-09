@@ -16,11 +16,11 @@ namespace API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        
+
         public UserController(IUserService userService)
         {
             _userService = userService;
-            
+
         }
 
         [HttpPost]
@@ -45,7 +45,7 @@ namespace API.Controllers
         public async Task<IActionResult> ContactUs(ContactUsDto contactUsDto)
         {
             var result = await _userService.ContactUsAsync(contactUsDto.FirstName, contactUsDto.Email, contactUsDto.Phone, contactUsDto.Message);
-           
+
             if (!result.Success)
             {
                 return BadRequest(new Result
@@ -70,9 +70,10 @@ namespace API.Controllers
                     FirstName = receivedUser.FirstName,
                     LastName = receivedUser.LastName,
                     Email = receivedUser.Email,
-                    IsAdmin = receivedUser.IsAdmin
+                    IsAdmin = receivedUser.IsAdmin,
                 }
                 );
+            
             }
             catch (Exception exc)
             {
@@ -80,10 +81,32 @@ namespace API.Controllers
             }
         }
 
-        
-       
 
 
-        
+        [HttpGet]
+        //[Authorize(Roles = "Admin")]
+        [Route("getUserImage")]
+        public async Task<IActionResult> GetUserImage()
+        {
+            try
+            {
+                var user = await _userService.GetUserImageASync();
+                return Ok(new UserImageDto
+                {
+                    Image = user.Image
+                }
+                );
+
+            }
+            catch (Exception exc)
+            {
+                return BadRequest(exc);
+            }
+        }
+
+
+
+
+
     }
 }
