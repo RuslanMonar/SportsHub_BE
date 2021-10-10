@@ -10,6 +10,9 @@ namespace Application.Services.Admin.Interfaces
     {
         Task<CategoriesResult> GetAllCategories();
         Task<Result> AddTeam(string name, string location, int category, int subcategory, string imagePath);
+        Task<Result> EditTeam(int id, string currentLocation, string? newLocation, string currentCategory, string? newCategory,
+            string currentSubCategory, string? newSubCategory, string currentName, string? newName);
 
+        Task<AllTeamsResult> GetAllTeams();
     }
 }
