@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using Application.Services.User;
 using Microsoft.AspNetCore.Http;
+using API.DTOs;
 
 namespace Application.Services
 {
@@ -119,8 +120,24 @@ namespace Application.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
+                
                 IsAdmin = isAdmin
             };
+        }
+
+        public async Task<UserImageDto> GetUserImageASync()
+        {
+            var user = await _userManager.FindByIdAsync(_userAccessorService.GetUserId());
+            if (user == null)
+            {
+                throw new Exception("User does not exists");
+            }
+
+            return new UserImageDto
+            {
+                Image = user.Image
+            };
+           
         }
         
     }

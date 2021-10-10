@@ -1,4 +1,5 @@
-﻿using Application.Services.User;
+﻿using API.DTOs;
+using Application.Services.User;
 using Domain;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace Application.Services
         Task<Result> ContactUsAsync(string firstName,string email,string phone, string message);
 
         Task<UserDto> GetUserAsync();
+        Task<UserImageDto> GetUserImageASync();
         
     }
 }
